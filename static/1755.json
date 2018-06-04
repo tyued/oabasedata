@@ -1,0 +1,72 @@
+{
+    "bjlx": [
+        {
+            "id": "001",
+            "text": "普通班",
+            "parentId": "",
+            "type": "bjlx"
+        },
+        {
+            "id": "002",
+            "text": "实验班",
+            "parentId": "",
+            "type": "bjlx"
+        },
+        {
+            "id": "003",
+            "text": "临时班",
+            "parentId": "",
+            "type": "bjlx"
+        }
+    ],
+	"xqlx": [
+        {
+            "id": "01",
+            "text": "上学期",
+            "parentId": "",
+            "type": "xqlx"
+        },
+        {
+            "id": "02",
+            "text": "下学期",
+            "parentId": "",
+            "type": "xqlx"
+        }
+    ],
+
+  "qjdw": [
+        {
+          "id": "1",
+          "text": "按天请假",
+          "parentId": "",
+          "type": "qjdw"
+        },
+        {
+          "id": "2",
+          "text": "按半天请假",
+          "parentId": "",
+          "type": "qjdw"
+        },
+        {
+          "id": "3",
+          "text": "按小时请假",
+          "parentId": "",
+          "type": "qjdw"
+        }
+  ],
+
+  "scfs": [
+        {
+          "id": "1",
+          "text": "按自然日计算请假时长",
+          "parentId": "",
+          "type": "scfs"
+        },
+        {
+          "id": "2",
+          "text": "按工作日计算请假时长",
+          "parentId": "",
+          "type": "scfs"
+        }
+  ]
+}

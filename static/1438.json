@@ -1,0 +1,36 @@
+{
+    "bjlx": [
+        {
+            "id": "1",
+            "text": "普通班",
+            "parentId": "",
+            "type": "bjlx"
+        },
+        {
+            "id": "2",
+            "text": "实验班",
+            "parentId": "",
+            "type": "bjlx"
+        },
+        {
+            "id": "3",
+            "text": "临时班",
+            "parentId": "",
+            "type": "bjlx"
+        }
+    ],
+	"xqlx": [
+        {
+            "id": "01",
+            "text": "上学期",
+            "parentId": "",
+            "type": "xqlx"
+        },
+        {
+            "id": "02",
+            "text": "下学期",
+            "parentId": "",
+            "type": "xqlx"
+        }
+    ]
+}

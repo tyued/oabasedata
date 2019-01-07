@@ -38,6 +38,9 @@
 	transition: .38s;
 	transform-origin: 50% 50%;
 }
+.drag .hamburger{
+	cursor: move;
+}
 
 .hamburger.is-active {
 	transform: rotate(90deg);

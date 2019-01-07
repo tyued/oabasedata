@@ -27,7 +27,7 @@ export default {
   name: 'audittemplate',
   data() {
     return {
-      xxdm:'',
+      xxdm: '',
       listLoading: false,
       list: []
     };
@@ -53,7 +53,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
   .circle-ico{
     display: inline-block;
     line-height: 1;

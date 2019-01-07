@@ -2,15 +2,14 @@ import fetch from 'utils/fetch';
 
 export function placeAll(query) {
   return fetch({
-    url: '/api/base/xkxtXslxb/all',
+    url: '/api/admin/xkxtXslxb/all',
     method: 'get',
     params: query
   });
 }
-
 export function page(query) {
   return fetch({
-    url: '/api/base/xkxtXslxb/page',
+    url: '/api/admin/xkxtXslxb/page',
     method: 'get',
     params: query
   });
@@ -18,7 +17,7 @@ export function page(query) {
 
 export function addObj(obj) {
   return fetch({
-    url: '/api/base/xkxtXslxb',
+    url: '/api/admin/xkxtXslxb',
     method: 'post',
     data: obj
   });
@@ -26,21 +25,21 @@ export function addObj(obj) {
 
 export function getObj(id) {
   return fetch({
-    url: '/api/base/xkxtXslxb/' + id,
+    url: '/api/admin/xkxtXslxb/' + id,
     method: 'get'
   })
 }
 
 export function delObj(id) {
   return fetch({
-    url: '/api/base/xkxtXslxb/' + id,
+    url: '/api/admin/xkxtXslxb/' + id,
     method: 'delete'
   })
 }
 
 export function putObj(id, obj) {
   return fetch({
-    url: '/api/base/xkxtXslxb/' + id,
+    url: '/api/admin/xkxtXslxb/' + id,
     method: 'put',
     data: obj
   })

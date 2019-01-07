@@ -103,10 +103,10 @@ var renderfu = function (colname, entry) {
     created () {
         GetScoreList({
             version: 1,
-            xxdm:this.xxdm,  //学校
-            xmid:this.xmid,  //项目
-            rwid:this.rwid,  //任务
-            bjid:this.bjid   //班级                         
+            xxdm:'1438',  //学校
+            xmid:'0ab06e83-714d-4b9d-b9e1-b2ec51c6315a',  //项目
+            rwid:'6587cfb2-49e5-4e03-9814-0d4ac62af61d',  //任务
+            bjid:'2018143810101'  //班级                         
         }).then(response => {
             // console.log(response);
             let resList=response;

@@ -1,0 +1,445 @@
+<div class="app-container calendar-list-container">
+  <el-row>
+    <el-button type="primary" @click="showQDialog">添加题目</el-button>
+    <a class="download" href="http://newreadlevel.91sst.com.cn/home/DowBQMobile" target="_blank">
+      <el-button type="primary">批量导入模板下载</el-button>
+    </a>
+    <el-button type="primary" @click="handleInQ">批量导入</el-button>
+    <el-button type="primary" @click="handleOutQAll">导出题库</el-button>
+    <el-button type="primary" @click="delAllQDialog = true">批量删除</el-button>
+  </el-row>
+
+  <el-row class="form-item">
+    <el-form :model="outQForm" :rules="rules2" ref="ruleFormQS" label-width="100px" class="demo-ruleForm">
+      <el-col class="inline-item">
+        <el-form-item label="所属年级" prop="Class">
+          <el-select clearable @change="queryQIdOut" v-model="outQForm.Class" placeholder="请选择年级">
+            <el-option v-for="item in classOptions" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col class="inline-item">
+        <el-form-item v-if="HaveTerm == 0" label="所属学期" prop="Grade">
+          <el-select clearable @change="queryQIdOut" v-model="outQForm.Grade" placeholder="请选择学期">
+            <el-option label="上学期" :value="1"></el-option>
+            <el-option label="下学期" :value="2"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col class="inline-item">
+        <el-form-item label="书目" prop="BookId">
+          <el-select clearable @change="changeBook" v-model="outQForm.BookId" placeholder="请选择相关书目">
+            <el-option v-for="(item, index) in QOutList" :label="item.BookName" :value="item.BookId" :key="index"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col class="inline-item">
+        <el-form-item label="题型" prop="Type">
+          <el-select clearable @change="changeQType" v-model="outQForm.Type" placeholder="选择题">
+            <el-option label="选择题" :value="1"></el-option>
+            <el-option label="填空题" :value="2"></el-option>
+            <el-option label="判断题" :value="3"></el-option>
+            <el-option label="多选题" :value="4"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+    </el-form>
+    <el-button style="margin-left: 20px;" type="primary" @click="handleSearch('ruleFormQS')">搜索</el-button>
+  </el-row>
+
+  <!-- card start -->
+  <el-card class="card-item" shadow="hover" v-for="(item, index) in QList" style="line-height: 2em;" :key="index">
+    <el-row>
+      <el-row>
+        <el-checkbox v-model="item.state">{{item.qname}}</el-checkbox>
+        &nbsp;{{item.Title}}
+      </el-row>
+      <el-row v-if="item.Type == 1">
+        <p v-for="(ele, idx) in item.qArr" :key="idx">
+          <el-radio disabled v-model="item.Answer" :label="++idx + ''">
+            <span style="color: #303133;">{{ele}}</span>
+          </el-radio>
+        </p>
+      </el-row>
+
+      <el-row v-if="item.Type == 2">
+        <span style="color: #303133;">参考答案：{{item.qArr[0]}}</span>
+      </el-row>
+
+      <el-row v-if="item.Type == 3">
+        <p>
+          <el-radio disabled v-model="item.Answer" label="1">
+            <span style="color: #303133;">{{item.qArr[0]}}</span>
+          </el-radio>
+        </p>
+        <p>
+          <el-radio disabled v-model="item.Answer" label="2">
+            <span style="color: #303133;">{{item.qArr[1]}}</span>
+          </el-radio>
+        </p>
+      </el-row>
+      <el-row v-if="item.Type == 4">
+        <el-checkbox-group v-model="item.ansArr">
+          <p v-for="(obj, objidx) in item.qArr" :key="objidx">
+            <el-checkbox :label="++objidx + ''" disabled>
+              <span style="color: #303133;">{{obj}}</span>
+            </el-checkbox>
+          </p>
+        </el-checkbox-group>
+      </el-row>
+       
+    </el-row>
+
+    <div class="hidden-row" :style="'height:'+item.styleIndex+'px;'">
+      <p v-if="item.Type != 2">参考答案：{{item.Answer.split('|').join(',')}}</p>
+      <p style="margin-bottom: 0">难易度： {{item.diff}}</p>
+    </div>
+
+    <div style="line-height: 2em;">
+      <p>书本名：{{item.BookName}}</p>
+      <p>
+        <span>年级：{{item.ClassName}}</span>&emsp;
+        <span v-if="HaveTerm == 0">学期：{{item.GradeName}}</span>
+      </p>
+      <div>
+        <el-button size="small" type="danger" @click="showDelDialog(item)">删除</el-button>
+        <el-button size="small" type="warning" @click="editQ(item)">修改</el-button>
+        <el-button size="small" type="primary" @click="slideToggle(item)">详情</el-button>
+      </div>
+    </div>
+  </el-card>
+
+  <!-- 添加题目弹层 -->
+  <el-dialog title="添加题目" :visible.sync="QDialog">
+    <el-form :model="ruleFormQ" :rules="rules1" ref="ruleFormQ" label-width="100px" class="demo-ruleForm">
+
+      <el-form-item label="所属年级" prop="Class">
+        <el-select @change="queryBookId" v-model="ruleFormQ.Class" placeholder="请选择年级">
+          <el-option v-for="item in classOptions" :key="item.value" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="HaveTerm == 0" label="所属学期" prop="Grade">
+        <el-select @change="queryBookId" v-model="ruleFormQ.Grade" placeholder="请选择学期">
+          <el-option label="上学期" :value="1"></el-option>
+          <el-option label="下学期" :value="2"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="书目" prop="BookId">
+        <el-select v-model="ruleFormQ.BookId" placeholder="请选择相关书目">
+          <el-option v-for="(item, index) in bookList" :label="item.BookName" :value="item.BookId" :key="index"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="题型" prop="Type">
+        <el-select @change="emptyAnswer" v-model="ruleFormQ.Type" placeholder="选择题">
+          <el-option label="选择题" :value="1"></el-option>
+          <el-option label="填空题" :value="2"></el-option>
+          <el-option label="判断题" :value="3"></el-option>
+          <el-option label="多选题" :value="4"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="难易度" prop="Difficulty">
+        <el-select v-model="ruleFormQ.Difficulty" placeholder="难易度">
+          <el-option label="简单" value="1"></el-option>
+          <el-option label="一般" value="2"></el-option>
+          <el-option label="困难" value="3"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="题干" prop="Title">
+        <el-input type="textarea" v-model="ruleFormQ.Title"></el-input>
+      </el-form-item>
+      <el-form-item label="答案" prop="Answer">
+        <el-row v-show="ruleFormQ.Type == 2">请注意，答案内请不要填写“|”符号</el-row>
+
+        <el-radio-group v-if="ruleFormQ.Type == 1" v-model="ruleFormQ.Answer">
+          <el-row v-for="(item, index) in selectArr" :key="index">
+            <el-col :span="20">
+              <el-radio :label="index + 1 + ''">
+                <template>
+                  <el-input placeholder="请输入内容" v-model="item.content"></el-input>
+                </template>
+              </el-radio>
+            </el-col>
+            <span class="icons" @click.stop="minusArr">
+              <i class="el-icon-remove-outline"></i>
+            </span>
+          </el-row>
+
+          <el-row>
+            <el-col :span="20">
+              <span class="span-text">选中单选按钮，设置正确答案</span>
+            </el-col>
+            <span class="icons" @click="addSelectArr">
+              <i class="el-icon-circle-plus-outline"></i>
+            </span>
+          </el-row>
+        </el-radio-group>
+
+        <el-input v-if="ruleFormQ.Type == 2" v-model="ruleFormQ.Answer" placeholder="请输入内容"></el-input>
+
+        <el-radio-group v-if="ruleFormQ.Type == 3" v-model="ruleFormQ.Answer">
+          <el-row>
+            <el-radio label="1">
+              <template>
+                <el-input v-model="judgeQ1">
+                </el-input>
+              </template>
+            </el-radio>
+          </el-row>
+          <el-row>
+            <el-radio label="2">
+              <template>
+                <el-input v-model="judgeQ2">
+                </el-input>
+              </template>
+            </el-radio>
+          </el-row>
+        </el-radio-group>
+
+        <el-checkbox-group v-if="ruleFormQ.Type == 4" v-model="checkedQ" :min="1">
+          <el-row v-for="(item, index) in checkedQList" :key="index">
+            <el-checkbox :label="index + 1 + ''" :key="index">
+              <template>
+                <el-input placeholder="请输入内容" v-model="item.content"></el-input>
+              </template>
+            </el-checkbox>
+            <span class="icons" @click="minusCheckboxArr">
+              <i class="el-icon-remove-outline"></i>
+            </span>
+          </el-row>
+
+          <el-row>
+            <span class="span-text">选中多选按钮，设置正确答案</span>
+            <span class="icons" @click="addCheckboxArr">
+              <i class="el-icon-circle-plus-outline"></i>
+            </span>
+          </el-row>
+        </el-checkbox-group>
+
+      </el-form-item>
+
+      <el-form-item>
+        <!-- <el-button type="primary" @click="QDialog = false">取 消</el-button> -->
+        <el-button type="primary" @click="submitAddQ('ruleFormQ')">确 定</el-button>
+      </el-form-item>
+    </el-form>
+  </el-dialog>
+  <!-- /添加题目弹层 -->
+
+
+  <!-- 修改题目弹层 -->
+  <el-dialog title="修改题目" :visible.sync="QDialogEdit">
+    <el-form :model="ruleFormQ" :rules="rules1" ref="ruleFormQ" label-width="100px" class="demo-ruleForm">
+
+      <el-form-item label="所属年级" prop="Class">
+        <el-select @change="queryQIdOut" v-model="ruleFormQ.Class" placeholder="请选择年级">
+          <el-option v-for="item in classOptions" :key="item.value" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="HaveTerm == 0" label="所属学期" prop="Grade">
+        <el-select @change="queryQIdOut" v-model="ruleFormQ.Grade" placeholder="请选择学期">
+          <el-option label="上学期" :value="1"></el-option>
+          <el-option label="下学期" :value="2"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="书目" prop="BookId">
+        <el-select v-model="ruleFormQ.BookId" placeholder="请选择相关书目">
+          <el-option v-for="(item, index) in QOutList" :label="item.BookName" :value="item.BookId" :key="index"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="题型" prop="Type">
+        <el-select v-model="ruleFormQ.Type" placeholder="选择题">
+          <el-option label="选择题" :value="1"></el-option>
+          <el-option label="填空题" :value="2"></el-option>
+          <el-option label="判断题" :value="3"></el-option>
+          <el-option label="多选题" :value="4"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="难易度" prop="Difficulty">
+        <el-select v-model="ruleFormQ.Difficulty" placeholder="难易度">
+          <el-option label="简单" :value="1"></el-option>
+          <el-option label="一般" :value="2"></el-option>
+          <el-option label="困难" :value="3"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="题干" prop="Title">
+        <el-input type="textarea" v-model="ruleFormQ.Title"></el-input>
+        <el-row v-show="ruleFormQ.Type == 2">请注意，答案内请不要填写“|”符号</el-row>
+      </el-form-item>
+      <el-form-item label="答案" prop="Answer">
+        <el-radio-group v-if="ruleFormQ.Type == 1" v-model="ruleFormQ.Answer">
+          <el-row v-for="(item, index) in selectArr" :key="index">
+            <el-col :span="20">
+              <el-radio :label="index + 1 + ''">
+                <template>
+                  <el-input placeholder="请输入内容" v-model="item.content"></el-input>
+                </template>
+              </el-radio>
+            </el-col>
+
+            <span class="icons" @click.stop="minusArr">
+              <i class="el-icon-remove-outline"></i>
+            </span>
+          </el-row>
+
+          <el-row>
+            <el-col :span="20">
+              <span class="span-text">选中单选按钮，设置正确答案</span>
+
+            </el-col>
+            <span class="icons" @click="addSelectArr">
+              <i class="el-icon-circle-plus-outline"></i>
+            </span>
+          </el-row>
+        </el-radio-group>
+
+        <el-input v-if="ruleFormQ.Type == 2" v-model="emptyInput" placeholder="请输入内容"></el-input>
+
+        <el-radio-group v-if="ruleFormQ.Type == 3" v-model="ruleFormQ.Answer">
+          <el-row>
+            <el-radio label="1">
+              <template>
+                <el-input v-model="judgeQ1">
+                </el-input>
+              </template>
+            </el-radio>
+          </el-row>
+          <el-row>
+            <el-radio label="2">
+              <template>
+                <el-input v-model="judgeQ2">
+                </el-input>
+              </template>
+            </el-radio>
+          </el-row>
+        </el-radio-group>
+
+        <el-checkbox-group v-if="ruleFormQ.Type == 4" v-model="checkedQ" :min="1">
+          <el-row v-for="(item, index) in checkedQList" :key="index">
+            <el-checkbox :label="index + 1 + ''" :key="index">
+              <template>
+                <el-input placeholder="请输入内容" v-model="item.content"></el-input>
+              </template>
+            </el-checkbox>
+            <span class="icons" @click="minusCheckboxArr">
+              <i class="el-icon-remove-outline"></i>
+            </span>
+          </el-row>
+
+          <el-row>
+            <span class="span-text">选中多选按钮，设置正确答案</span>
+            <span class="icons" @click="addCheckboxArr">
+              <i class="el-icon-circle-plus-outline"></i>
+            </span>
+          </el-row>
+        </el-checkbox-group>
+
+      </el-form-item>
+
+      <el-form-item>
+        <el-button type="primary" @click="submitEditQ('ruleFormQ')">确 定</el-button>
+      </el-form-item>
+    </el-form>
+  </el-dialog>
+  <!-- /修改题目弹层 -->
+
+  <!-- 导入题库 -->
+  <el-dialog title="导入题库" :visible.sync="getInQ" width="30%" center>
+    <el-form :model="inQForm" ref="inQForm" label-width="100px" class="demo-ruleForm">
+      <el-form-item label="所属年级" prop="Class">
+        <el-select @change="queryQIdIn" v-model="inQForm.Class" placeholder="请选择年级">
+          <el-option v-for="item in classOptions" :key="item.value" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="HaveTerm == 0" label="所属学期" prop="Grade">
+        <el-select @change="queryQIdIn" v-model="inQForm.Grade" placeholder="请选择学期">
+          <el-option label="上学期" :value="1"></el-option>
+          <el-option label="下学期" :value="2"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="书目" prop="BookId">
+        <el-select v-model="inQForm.BookId" placeholder="请选择相关书目">
+          <el-option v-for="(item, index) in QInList" :label="item.BookName" :value="item.BookId" :key="index"></el-option>
+        </el-select>
+      </el-form-item>
+
+    </el-form>
+    <el-alert title="友情提示：请选择书目后才能上传文件" type="warning"></el-alert>
+    <span slot="footer" class="dialog-footer" v-show="inQForm.BookId.length != 0">
+      <el-upload ref="upload" :on-success="handleAvatarSuccess" class="upload-demo" :action="`/red/ReadPC/InsertBQ?SchoolCode=${xxdm}&BookID=${inQForm.BookId}`" :before-remove="beforeRemove" :limit="1"
+        :file-list="fileList" :multiple="false">
+        <el-button size="small" type="primary">点击上传</el-button>
+      </el-upload>
+      <!-- http://newreadlevel.91sst.com.cn/api/ReadPC/InsertBQ -->
+    </span>
+  </el-dialog>
+  <!-- /导入题库 -->
+
+  <!-- 导出题库 -->
+  <el-dialog title="导出题库" :visible.sync="getOutQAll" width="30%" center>
+    <el-form :rules="ruleOut" :model="outQFormAll" ref="outQFormAllRef" label-width="100px" class="demo-ruleForm">
+      <el-form-item label="所属年级" prop="Class">
+        <el-select @change="queryQIdOutAll" v-model="outQFormAll.Class" placeholder="请选择年级">
+          <el-option v-for="item in classOptions" :key="item.value" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="HaveTerm == 0" label="所属学期" prop="Grade">
+        <el-select @change="queryQIdOutAll" v-model="outQFormAll.Grade" placeholder="请选择学期">
+          <el-option label="上学期" :value="1"></el-option>
+          <el-option label="下学期" :value="2"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="书目" prop="BookId">
+        <el-select v-model="outQFormAll.BookId" placeholder="请选择相关书目">
+          <el-option v-for="(item, index) in QOutListAll" :label="item.BookName" :value="item.BookId" :key="index"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="名称" prop="name">
+        <el-input v-model="outQFormAll.name" placeHolder="请输入名称"></el-input>
+      </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="getOutQAll = false">取 消</el-button>
+      <el-button type="primary" @click="submitOutQAll('outQFormAllRef')">确 定</el-button>
+    </span>
+  </el-dialog>
+  <!-- /导出题库 -->
+
+  <!-- 删除单个题目弹出层 -->
+  <el-dialog title="删除题目" :visible.sync="delQDialog" width="30%" center>
+    <span>确认要删除吗？</span>
+    <span slot="footer" class="dialog-footer">
+      <el-button type="primary" plain @click="delQDialog = false">取 消</el-button>
+      <el-button type="primary" @click="delQ">确 定</el-button>
+    </span>
+  </el-dialog>
+  <!-- /删除单个题目弹出层 -->
+
+  <!-- 删除所有题目弹出层 -->
+  <el-dialog title="批量删除题目" :visible.sync="delAllQDialog" width="30%" center>
+    <span>确认要删除吗？</span>
+    <span slot="footer" class="dialog-footer">
+      <el-button type="primary" plain @click="delAllQDialog = false">取 消</el-button>
+      <el-button type="primary" @click="delAllQ">确 定</el-button>
+    </span>
+  </el-dialog>
+  <!-- /删除所有题目弹出层 -->
+
+
+  <!-- 分页组件 -->
+  <el-row>
+    <PageBar :currentpage="CurrentPage" @handlePageSize="handleCurrentPageSize" @handlePage="handleCurrentPage" :total="TotalPage"></PageBar>
+  </el-row>
+</div>

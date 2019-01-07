@@ -108,7 +108,7 @@
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .dashboard-editor-container {
-    margin: 30px;
+    margin: 30px 30px 0;
     .btn-group {
         margin-bottom: 60px;
     }

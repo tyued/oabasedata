@@ -41,7 +41,14 @@ export function putObj(id, obj) {
 
 export function dqxnxqObj(query) {   // 获取当前学年学期
   return fetch({
-    url: '/api/base/jcXndm/getDqxnxq',
+    url: '/api/base/jcXndm/getCurrentXnxq',
+    method: 'get',
+    params: query
+  });
+}
+export function getCurrentXnxq(query) {   // 获取当前学年学期
+  return fetch({
+    url: '/api/base/jcXndm/getCurrentXnxq',
     method: 'get',
     params: query
   });

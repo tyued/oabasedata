@@ -1,0 +1,27 @@
+<div class="app-container calendar-list-container">
+  <el-row style="padding-bottom: 10px;">
+    <el-col class="inline-item">
+      年级&nbsp;
+      <el-select @change="queryQIdOut" v-model="outQForm.Class" placeholder="请选择年级">
+        <el-option v-for="item in classOptions" :key="item.value" :label="item.label" :value="item.value">
+        </el-option>
+      </el-select>
+    </el-col>
+    <el-col v-if="HaveTerm == 0" class="inline-item">
+      学期&nbsp;
+      <el-select @change="queryQIdOut" v-model="outQForm.Grade" placeholder="请选择学期">
+        <el-option label="上学期" :value="1"></el-option>
+        <el-option label="下学期" :value="2"></el-option>
+      </el-select>
+    </el-col>
+    <el-col class="inline-item">
+      书目&nbsp;
+      <el-select @change="changeBook" v-model="outQForm.BookId" placeholder="请选择相关书目">
+        <el-option v-if="QOutList.length !== 0" v-for="(item, index) in QOutList" :label="item.BookName" :value="item.BookId" :key="index"></el-option>
+      </el-select>
+    </el-col>
+  </el-row>
+
+  <router-view @getBookName="putSelect" :GradeIdx="outQForm.Grade" :ClassIdx="outQForm.Class" :BookId="outQForm.BookId" :bookArr="QOutList"></router-view>
+  <!-- <component v-bind:is="currentTabComponent" :ClassIdx="outQForm.Class" :BookId="outQForm.BookId" :bookArr="QOutList" @handlePush="goToEchart"></component> -->
+</div>

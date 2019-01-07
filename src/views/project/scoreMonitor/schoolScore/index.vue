@@ -209,7 +209,7 @@ export default {
     },
     getList() {
       let _this = this
-      console.log(_this.listQuery)
+      // console.log(_this.listQuery)
 
       //初始化echarts之前销毁之前的echarts实例
       if(_this.chart != null) {

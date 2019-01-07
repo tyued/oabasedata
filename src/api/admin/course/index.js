@@ -8,6 +8,14 @@ export function courseAll(query) {
   });
 }
 
+export function pagelist(query) {
+  return fetch({
+    url: '/api/base/jcKcsj/pagelist',
+    method: 'get',
+    params: query
+  });
+}
+
 export function page(query) {
   return fetch({
     url: '/api/base/jcKcsj/page',
@@ -18,7 +26,7 @@ export function page(query) {
 
 export function addObj(obj) {
   return fetch({
-    url: '/api/base/jcKcsj',
+   url: '/api/base/jcKcsj',
     method: 'post',
     data: obj
   });
@@ -38,10 +46,27 @@ export function delObj(id) {
   })
 }
 
+
 export function putObj(id, obj) {
   return fetch({
     url: '/api/base/jcKcsj/' + id,
     method: 'put',
     data: obj
+  })
+}
+
+export function getAllKcnjgx(query) {
+  return fetch({
+    url: '/api/base/kcnjGx/selectAll',
+    method: 'post',
+    data: query
+  })
+}
+
+export function getKclbByXxdm(query) {
+  return fetch({
+    url: '/api/admin/kclbwh/getKclbByXxdm',
+    method: 'get',
+    params: query
   })
 }

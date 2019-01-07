@@ -1,0 +1,232 @@
+<div class="app-container calendar-list-container">
+  <el-row class="nav-item">
+    <el-button type="primary" @click="showAddPublicBook">添加书目</el-button>
+  </el-row>
+  <!-- <el-row class="row-input">
+    
+  </el-row> -->
+  <el-row style="padding-top: 10px">
+    年级
+    <el-select @change="handleSearch" v-model="classValue" clearable placeholder="请选择年级">
+      <el-option v-for="item in classOptions" :key="item.value" :label="item.label" :value="item.value">
+      </el-option>
+    </el-select>
+    <span>&emsp;学期</span>
+    <el-select @change="handleSearch" v-model="termValue" clearable placeholder="请选择学期">
+      <el-option v-for="item in termOptions" :key="item.value" :label="item.label" :value="item.value">
+      </el-option>
+    </el-select>
+    &emsp;必读/选读
+    <el-select @change="handleSearch" v-model="typeValue" clearable placeholder="全部类型" style="margin-right: 10px;">
+      <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value">
+      </el-option>
+    </el-select>
+    <el-input maxlength="20" size="medium" style="width: 200px;" v-model="searchName" placeholder="请输入关键字"></el-input>
+    <el-button type="primary" @click="handleSearch" size="middle">搜索</el-button>
+  </el-row>
+
+
+  <el-row style="padding-top: 10px">
+    <el-table :data="tableData" border style="width: 100%">
+
+      <el-table-column prop="BookName" label="书名" width="180">
+      </el-table-column>
+      <el-table-column prop="Author" label="作者">
+      </el-table-column>
+      <el-table-column prop="typeName" label="是否必读">
+      </el-table-column>
+      <el-table-column prop="className" label="所属年级">
+      </el-table-column>
+      <el-table-column prop="gradeName" label="所属学期">
+      </el-table-column>
+      <el-table-column prop="QuestionCount" label="已有题量">
+      </el-table-column>
+      <el-table-column width="274" prop="done" label="操作">
+        <template slot-scope="scope">
+          <el-button size="small" type="success" @click="showEditPublicBook(scope.row)">编辑</el-button>
+          <el-button size="small" type="danger" @click="showDelDialog(scope.row)">删除</el-button>
+          <el-button size="small" type="primary" @click="goToQList(scope.row)">题目管理</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-row>
+  <el-row>
+    <PageBar :currentpage="CurrentPage" @handlePageSize="handleCurrentPageSize" @handlePage="handleCurrentPage" :total="TotalPage"
+      :currentNumber="currentNumber"></PageBar>
+  </el-row>
+
+  <!-- 弹出层部分 -->
+  <!-- 添加书目弹层 -->
+  <el-dialog title="添加书目" :visible.sync="dialogFormVisible">
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form-item style="width: 320px" label="书目名称" prop="bookname">
+        <el-input v-model="ruleForm.bookname"></el-input>
+      </el-form-item>
+      <el-form-item style="width: 320px" label="作者" prop="author">
+        <el-input v-model="ruleForm.author"></el-input>
+      </el-form-item>
+      <el-form-item style="width: 320px" label="出版社" prop="press">
+        <el-input v-model="ruleForm.press"></el-input>
+      </el-form-item>
+      <el-form-item label="出版日期" prop="year">
+        <el-date-picker value-format="yyyy-MM-dd" v-model="ruleForm.year" type="date" placeholder="选择日期">
+        </el-date-picker>
+      </el-form-item>
+
+      <el-form-item label="所属年级" prop="grade">
+        <el-select v-model="ruleForm.grade" placeholder="请选择年级">
+          <el-option label="一年级" :value="1"></el-option>
+          <el-option label="二年级" :value="2"></el-option>
+          <el-option label="三年级" :value="3"></el-option>
+          <el-option label="四年级" :value="4"></el-option>
+          <el-option label="五年级" :value="5"></el-option>
+          <el-option label="六年级" :value="6"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="所属学期" prop="term">
+        <el-select v-model="ruleForm.term" placeholder="请选择学期">
+          <el-option label="上学期" :value="1"></el-option>
+          <el-option label="下学期" :value="2"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="图书类型" prop="BookType">
+        <el-select v-model="ruleForm.BookType" placeholder="请选择图书类型">
+          <el-option label="历史/地理" :value="1"></el-option>
+          <el-option label="故事/漫画" :value="2"></el-option>
+          <el-option label="国学/礼仪" :value="3"></el-option>
+          <el-option label="名人/传记" :value="4"></el-option>
+          <el-option label="人文/教育" :value="5"></el-option>
+          <el-option label="诗词/散文" :value="6"></el-option>
+          <el-option label="艺术/综合" :value="7"></el-option>
+          <el-option label="自然/科普" :value="8"></el-option>
+          <el-option label="小说/名著" :value="9"></el-option>
+          <el-option label="其他" :value="10"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="是否必读" prop="require">
+        <el-radio-group v-model="ruleForm.require">
+          <el-radio :label="1">
+            <template>
+              必读
+            </template>
+          </el-radio>
+          <el-radio :label="2">
+            <template>
+              选读
+            </template>
+          </el-radio>
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item label="上传图片" prop="imageurl">
+        <el-upload class="avatar-uploader" :action="'/red/ReadPC/UploadImage?schoolcode=' + xxdm" :show-file-list="false" :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload">
+          <img v-if="ruleForm.imageurl" :src="ruleForm.imageurl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon" style="border: 1px dashed #d9d9d9;border-radius: 6px;cursor: pointer;"></i>
+        </el-upload>
+      </el-form-item>
+
+      <el-form-item label="导读" prop="desc">
+        <el-input type="textarea" v-model="ruleForm.desc" placeholder="导读内容，不能超过100个字"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="submitAddPublicBook('ruleForm')">确定</el-button>
+      </el-form-item>
+    </el-form>
+
+  </el-dialog>
+  <!-- /添加书目弹层 -->
+
+  <!-- 编辑书目弹层 -->
+  <el-dialog title="修改书目" :visible.sync="editDialogShow">
+    <el-form :model="ruleFormEdit" :rules="rules" ref="ruleFormEdit" label-width="100px" class="demo-ruleFormEdit">
+      <el-form-item label="书目名称" prop="bookname">
+        <el-input v-model="ruleFormEdit.bookname"></el-input>
+      </el-form-item>
+      <el-form-item label="作者" prop="author">
+        <el-input v-model="ruleFormEdit.author"></el-input>
+      </el-form-item>
+      <el-form-item label="出版社" prop="press">
+        <el-input v-model="ruleFormEdit.press"></el-input>
+      </el-form-item>
+      <el-form-item label="出版日期" prop="year">
+        <el-date-picker value-format="yyyy-MM-dd" v-model="ruleFormEdit.year" type="date" placeholder="选择日期">
+        </el-date-picker>
+      </el-form-item>
+
+      <el-form-item label="所属年级" prop="grade">
+        <el-select v-model="ruleFormEdit.grade" placeholder="请选择年级">
+          <el-option label="一年级" :value="1"></el-option>
+          <el-option label="二年级" :value="2"></el-option>
+          <el-option label="三年级" :value="3"></el-option>
+          <el-option label="四年级" :value="4"></el-option>
+          <el-option label="五年级" :value="5"></el-option>
+          <el-option label="六年级" :value="6"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="所属学期" prop="term">
+        <el-select v-model="ruleFormEdit.term" placeholder="请选择学期">
+          <el-option label="上学期" :value="1"></el-option>
+          <el-option label="下学期" :value="2"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="图书类型" prop="BookType">
+        <el-select v-model="ruleFormEdit.BookType" placeholder="请选择图书类型">
+          <el-option label="历史/地理" :value="1"></el-option>
+          <el-option label="故事/漫画" :value="2"></el-option>
+          <el-option label="国学/礼仪" :value="3"></el-option>
+          <el-option label="名人/传记" :value="4"></el-option>
+          <el-option label="人文/教育" :value="5"></el-option>
+          <el-option label="诗词/散文" :value="6"></el-option>
+          <el-option label="艺术/综合" :value="7"></el-option>
+          <el-option label="自然/科普" :value="8"></el-option>
+          <el-option label="小说/名著" :value="9"></el-option>
+          <el-option label="其他" :value="10"></el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="是否必读" prop="require">
+        <el-radio-group v-model="ruleFormEdit.require">
+          <el-radio :label="1">
+            <template>
+              必读
+            </template>
+          </el-radio>
+          <el-radio :label="2">
+            <template>
+              选读
+            </template>
+          </el-radio>
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item label="选择图片" prop="imageurl">
+        <el-upload class="avatar-uploader" :action="'/red/ReadPC/UploadImage?schoolcode=' + xxdm" :show-file-list="false" :on-success="handleAvatarSuccessEdit"
+          :before-upload="beforeAvatarUpload">
+          <img v-if="ruleFormEdit.imageurl" :src="ruleFormEdit.imageurl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon" style="border: 1px dashed #d9d9d9;border-radius: 6px;cursor: pointer;"></i>
+        </el-upload>
+      </el-form-item>
+
+      <el-form-item label="导读" prop="desc">
+        <el-input type="textarea" v-model="ruleFormEdit.desc"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="submitEditPublicBook('ruleFormEdit')">确定</el-button>
+      </el-form-item>
+    </el-form>
+  </el-dialog>
+  <!-- /编辑书目弹层 -->
+  <!-- 删除书目弹层 -->
+  <el-dialog title="提示" :visible.sync="deleteDialog" width="30%">
+    <span>确认要删除吗？</span>
+    <span slot="footer" class="dialog-footer">
+      <el-button type="primary" plain @click="deleteDialog = false">取 消</el-button>
+      <el-button type="primary" @click="deletePublicBook">确 定</el-button>
+    </span>
+  </el-dialog>
+  <!-- /删除书目弹层 -->
+
+  <!-- /弹出层部分 -->
+</div>

@@ -3,7 +3,7 @@
     <div class="filter-container">
       <h3>审批流程
         <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-plus">创建新审批</el-button>
-        <el-button class="filter-item" @click="handleIndex" type="primary" icon="el-icon-plus">审批首页</el-button>
+        <el-button class="filter-item" @click="handleIndex" type="primary" icon="el-icon-plus">审批首页(开发调试用)</el-button>
       </h3>
     </div>
     <hr>
@@ -50,7 +50,7 @@ export default {
   name: 'holidayManager',
   data() {
     return {
-      xxdm:'',
+      xxdm: '',
       listLoading: false,
       list: []
     };
@@ -85,7 +85,7 @@ export default {
     },
 
     getList() {
-      api.mbxx({ xxdm: this.xxdm}).then(response => {
+      api.mbxxAll({ xxdm: this.xxdm }).then(response => {
         this.list = this.handleData(response);
       });
     },
@@ -104,35 +104,35 @@ export default {
       const mbid = data.mbid;
       this.$router.push({ name: '设置流程步骤', query: { mbid } });
     },
-    scsplcmb(mbxx){
-      if(mbxx.lczt==1){
+    scsplcmb(mbxx) {
+      if (mbxx.lczt === 1) {
         this.$confirm('此操作将删除流程模板?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          api.del(mbxx.mbid).then(response => {
+          api.del(mbxx.mbid).then(() => {
             this.getList();
           });
         });
       }
     },
-    szmbzt(mb){
+    szmbzt(mb) {
       const mbxx = {};
-      if(mb.lczt==1){
+      if (mb.lczt === 1) {
         mbxx.lczt = 0;
-      }else{
-        mbxx.lczt= 1;
+      } else {
+        mbxx.lczt = 1;
       }
       mbxx.mbid = mb.mbid;
-      api.put(mb.mbid,mbxx).then(response => {
+      api.put(mb.mbid, mbxx).then(() => {
         this.getList();
       });
     }
   }
 };
 </script>
-<style>
+<style scoped>
 .filter-container .filter-item {
   vertical-align: inherit;
 }
@@ -170,7 +170,7 @@ export default {
   display: inline-block;
   line-height: 1;
   white-space: nowrap;
-  cursor: pointer;
+  /*cursor: pointer;*/
   color: #fff;
   -webkit-appearance: none;
   text-align: center;

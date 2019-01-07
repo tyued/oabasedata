@@ -38,3 +38,12 @@ export function putObj(id, obj) {
     data: obj
   })
 }
+
+
+export function getXqlist(query) {
+  return fetch({
+    url: '/api/base/jcXqdm/queryXqList',
+    method: 'get',
+    params: query
+  });
+}

@@ -21,7 +21,7 @@ export function saveSpecialInfo(query) {
 // 获取当前学年学期
 export function dqxnxqObj(query) {
   return fetch({
-    url: '/api/base/jcXndm/getDqxnxq',
+    url: '/api/base/jcXndm/getCurrentXnxq',
     method: 'get',
     params: query
   });
@@ -47,6 +47,7 @@ export function getTcsLxList(query) {
 export function getTreeNode(query) {
   return fetch({
     url: '/api/admin/special/getTreeNode',
+    //url: '/test/special/getTreeNode',
     method: 'get',
     params: query
   });

@@ -8,6 +8,10 @@ $yellow:#FEC171;
 
 $panGreen: #30B08F;
 
+@mixin borderColor($bordercolor) {
+  border: 1px solid $bordercolor;
+}
+
 @mixin colorBtn($color) {
   background: $color;
   &:hover {

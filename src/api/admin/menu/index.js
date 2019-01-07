@@ -8,6 +8,22 @@ export function fetchTree(query) {
   });
 }
 
+export function fetchddTree(query) {
+  return fetch({
+    url: '/api/admin/mobilemenu/mobileddtree',
+    method: 'get',
+    params: query
+  });
+}
+
+export function fetchwxTree(query) {
+  return fetch({
+    url: '/api/admin/mobilemenu/mobilewxtree',
+    method: 'get',
+    params: query
+  });
+}
+
 export function fetchAll() {
   return fetch({
     url: '/api/admin/menu/all',

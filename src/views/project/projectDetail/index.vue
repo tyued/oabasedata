@@ -1,52 +1,36 @@
 <template>
-  <div class="app-container calendar-list-container body"> 
+<div class="app-container calendar-list-container body"> 
 
     <!-- 项目详情描述   -->
     <div class="detail">
         <!-- 项目名称 -->
         <div class="detail-box">
             <el-row class="detail-title">
-                <el-col :span="12">
-                    项目名称：
-                </el-col>
-                <el-col :span="12">
-                    {{itemDetail.mc}}
-                </el-col>
+                <el-col :span="12">项目名称：</el-col>
+                <el-col :span="12">{{itemDetail.mc}}</el-col>
             </el-row>
             <el-collapse-transition>
                 <el-row class="detail-content" v-if="!showPull">
-                    <el-col :span="12" class="content-title">
-                        学年学期：
-                    </el-col>
-                    <el-col :span="12">
-                        {{xnxq.xn+'年'+xnxq.xqmc}}
-                    </el-col>
+                    <el-col :span="12" class="content-title">学年学期：</el-col>
+                    <el-col :span="12">{{xnxq.xn+'年'+xnxq.xqmc}}</el-col>
                 </el-row>
             </el-collapse-transition>
             <el-collapse-transition>
                 <el-row class="detail-content" v-if="!showPull">
-                    <el-col :span="12" class="content-title">
-                        适用学科：
-                    </el-col>
-                    <el-col :span="12">
-                        {{itemDetail.kcmc}}
-                    </el-col>
+                    <el-col :span="12" class="content-title">适用学科：</el-col>
+                    <el-col :span="12">{{xxlm=='007'?(itemDetail.zymc+(itemDetail.kcmc?'/'+itemDetail.kcmc:'')):itemDetail.kcmc}}</el-col>
                 </el-row>
             </el-collapse-transition>	
             <el-collapse-transition>
                 <el-row class="detail-content" v-if="!showPull">
-                    <el-col :span="12" class="content-title">
-                        适用年级：
-                    </el-col>
-                    <el-col :span="12">
-                        {{itemDetail.njmc}}
-                    </el-col>
+                    <el-col :span="12" class="content-title">适用年级：</el-col>
+                    <el-col :span="12">{{itemDetail.njmc}}</el-col>
                 </el-row>
             </el-collapse-transition>
             <el-collapse-transition>
                 <el-row class="detail-content" v-if="showPull">
                     <el-col :span="24" class="content-title">
-                        目前该项目共有{{total}}个任务
+                        目前该项目共有{{itemDetail.allRwCount}}个任务
                     </el-col>
                 </el-row>
             </el-collapse-transition>	
@@ -62,63 +46,22 @@
                     {{jflx[itemDetail.jflx]}}
                 </el-col>
             </el-row>
+        </div>
+        <!-- 权重规则 -->
+        <div class="detail-box" v-if="itemDetail.jflx!=3&&itemDetail.jflx!=4&&itemDetail.jflx!=5">
+            <div class="detail-title">权重规则</div>
             <el-collapse-transition>
-                <el-row class="detail-content" v-if="!showPull">
-                    <el-col :span="12" class="content-title">
-                        最高学分：
-                    </el-col>
-                    <el-col :span="12">
-                        {{itemDetail.zgxf}}学分
-                    </el-col>
-                </el-row>	
-            </el-collapse-transition>
-            <el-collapse-transition>
-                <el-row class="detail-content" v-if="!showPull && itemDetail.jflx == 0">
-                    <el-col :span="12" class="content-title">
-                        最高成绩：
-                    </el-col>
-                    <el-col :span="12">
-                        {{itemDetail.zgcj}}分
-                    </el-col>
-                </el-row>	
-            </el-collapse-transition>
-            <transition-group>
-                <el-row class="detail-content" v-if="!showPull" v-for="(item,index) in itemDetail.hs" :key="index">
-                    <el-col :span="12" class="content-title">
-                        <span v-if="itemDetail.jflx == 1 && item.type == 0">累计完成{{item.zxz}}及以上获得</span>
-                        <span v-if="itemDetail.jflx == 1 && item.type == 1">累计完成{{item.zxz}}至{{item.zdz}}获得</span>
-                        <span v-if="itemDetail.jflx == 1 && item.type == 2">累计完成{{item.zdz}}及以下获得</span>
-                        <span v-if="itemDetail.jflx == 0">{{item.zxz}}~{{item.zdz}}获得</span>
-                    </el-col>
-                    <el-col :span="12">
-                        {{item.xf}}学分
+                <el-row class="detail-content" v-if="showPull">
+                    <el-col :span="24" class="content-title">
+                        <span>详细规则</span>
                     </el-col>
                 </el-row>
-            </transition-group>	
-        </div>
-        <!-- 任务上报情况 -->
-        <div class="detail-box" v-if="itemDetail.xmlx == 0">
-            <div class="detail-title">任务上报情况</div>
+            </el-collapse-transition>	
             <el-collapse-transition>
-                <el-row class="detail-content" v-if="unfinishedRw[0]">
-                    <el-col :span="12" class="content-title">
-                        {{unfinishedRw[0].mc}}
-                    </el-col>
-                    <el-col :span="12">
-                        未上报
-                    </el-col>
-                </el-row>	
+                <el-row class="detail-content"  v-if="!showPull">
+                    <div class="content-title">{{itemDetail.qzgz}}</div>
+                </el-row>
             </el-collapse-transition>
-            <transition-group>
-                <el-row class="detail-content" v-for="(item,index) in unfinishedRw" :key="index" v-if="!showPull && index > 0">
-                    <el-col :span="12" class="content-title">
-                        {{item.mc}}
-                    </el-col>
-                    <el-col :span="12">
-                        未上报
-                    </el-col>
-                </el-row>	
-            </transition-group>
         </div>
     </div>
     <div class="detail-pull">
@@ -126,344 +69,241 @@
     </div>
 
     <!-- 任务 -->
-    <el-row :gutter="20">
-
+    <el-row :gutter="20"  class="box-table">
         <!-- 任务列表 -->
-        <el-col :span="5" class="rw-table">
+        <el-col :span="6" class="rw-table">
             <div class="rw-header">
                 <span>项目任务</span>
                 <el-button type="primary" class="right" @click="handleCreate" v-if="itemDetail.xmlx == 0">新建任务</el-button>
             </div>
             <div class="rw-body">
-                <el-table :data="rwList" @row-click="selectBj" :row-class-name="tableRowClassName">
+                <el-table :data="rwList" @row-click="selectBj" :row-class-name="tableRowClassName" v-loading.body="listLoading">
                     <el-table-column width="3"></el-table-column> 
                     <el-table-column width="20"></el-table-column>    
-                    <el-table-column
-                        label="名称">
+                    <el-table-column label="名称">
                         <template slot-scope="scope">
-                           <span v-if="itemDetail.xmlx == 0">{{scope.row.mc}}</span>
-                           <span v-if="itemDetail.xmlx == 1">{{scope.row.mc}}</span>
-                           <span v-if="itemDetail.xmlx == 2">{{scope.row.kssj.substring(0,scope.row.kssj.length-5)+' '+scope.row.mc}}</span>  
-                           <span v-if="itemDetail.xmlx == 3">{{scope.row.kssj+' '+scope.row.mc}}</span> 
+                            <span v-if="itemDetail.xmlx == 0 || itemDetail.xmlx == 1">{{scope.row.mc}}</span>
+                            <span v-if="itemDetail.xmlx == 2">{{scope.row.kssj.substring(0,scope.row.kssj.length-5)+' '+scope.row.mc}}</span>  
+                            <span v-if="itemDetail.xmlx == 3">{{scope.row.kssj+' '+scope.row.mc}}</span> 
                         </template>
                     </el-table-column>
-                    <el-table-column
-                        v-if="itemDetail.xmlx==0"
-                        align="center"
-                        label="操作">
+                    <el-table-column v-if="itemDetail.xmlx==0" align="center" label="操作">
                         <template slot-scope="scope">
                             <el-button @click.stop="handleUpdate(scope.row)" type="text" class="update-btn" :disabled="scope.row.zt == 1 && scope.row.yxbc == 0">修改</el-button>
                             <el-button @click.stop="handleDelete(scope.row)" type="text" class="delete-btn" >删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
-                <div v-show="!listLoading" class="pagination-container">
+                <div v-show="!listLoading" class="pagination-container" v-if="rwList && rwList.length>0">
                     <el-pagination  @current-change="handleCurrentChange" :current-page.sync="listQuery.pageIndex" :page-size="listQuery.pageSize" layout="prev, pager, next" :total="total"> </el-pagination>
                 </div>
             </div>
         </el-col>
-
         <!-- 成绩/结果 列表 -->
-        <el-col :span="19" class="cj-table">
-
-            <div class="cj-header" v-if="(bjcj.length>0 && itemDetail.xmlx==0)||(resultData.length>0 && itemDetail.xmlx!=0)">
-                <el-button :type="showTable? 'info':'primary'" @click="showTable=false" v-if="itemDetail.xmlx == 0">成绩录入</el-button>
-                <el-button :type="showTable? 'primary':'info'" @click="watchResult" :disabled="itemDetail.xmlx != 0">查看结果</el-button>
-                <el-button type="primary" class="right mright" @click="reportCj">成绩上报</el-button>
-
-                <el-checkbox v-model="yxbc" @change="yxbcFun" class="yxbc-style" v-if="false">允许补充</el-checkbox>
+        <el-col :span="18" class="cj-table">
+            <div class="cj-header" v-if="((bjcj.length>0 && itemDetail.xmlx==0)||(resultData.length>0 && itemDetail.xmlx!=0))">
+                <div v-if="itemDetail.jflx != 6">
+                    <el-dropdown class="right mright" @command="handleCommand" v-if="itemDetail.jflx != 4">
+                        <el-button type="primary">数据导入</el-button>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item command="xm">按项目导入</el-dropdown-item>
+                            <el-dropdown-item command="rw">按任务导入</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                    <el-button type="primary" class="right mright" @click="reportCj">成绩上报</el-button>
+                </div>
             </div>
 
             <div v-if="(bjcj.length==0 && itemDetail.xmlx==0)||(resultData.length==0 && itemDetail.xmlx!=0)" class="empty-table">暂无数据</div>
-            
+
             <div class="cj-body">
                 <el-tabs type="border-card" @tab-click="tabClick" v-model="cjIndex" v-if="(bjcj.length>0 && itemDetail.xmlx==0)||(resultData.length>0 && itemDetail.xmlx!=0)">
-                    <!-- 操作提示 -->
-                    <div class="table-notice left" v-if="itemDetail.jflx == 1 && !showTable">
-                        <div class="left notice-msg" ref="noticeMsg" v-if="showNotice">操作提示：系统默认学生学分累积为1，若减少学生累积分，点击该学生头像即可，再次点击撤销。</div>
-                        <el-button  type="text" class="left notice-icon"  icon="el-icon-tickets" @click="collapseNotice"></el-button>
-                    </div>
                     <!-- 成绩录入 -->
-                    <el-tab-pane :label="item.bjmc" v-for="(item,index) in bjcj" :key="index" v-if="!showTable">
-
+                    <el-tab-pane :label="item.bjmc" v-for="(item,index) in bjcj" :key="index">
                         <div class="table-header">
-                            <span v-if="itemDetail.jflx == 0">{{item.noEntryCount}}人未录入，共{{item.totalCount}}人</span>
-                            <el-button type="primary" class="right" @click="importOnline(item)" v-if="itemDetail.jflx == 0">在线导入</el-button>
+                            <div style="float:left; margin-right:20px;">
+                                <el-input placeholder="请输入姓名进行搜索" @keyup.enter.native="handleFilter" v-model="listQuery.username" class="input-with-select"  style="width: 400px;" ></el-input>
+                                <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">搜索</el-button>
+                            </div>
+                            <span>{{item.noEntryCount}}人未录入，共{{item.totalCount}}人</span>
+                            <div v-if="itemDetail.jflx == 3">录入说明：1=A等级；2=B等级；3=C等级；4=D等级；</div>
                         </div>
                         <div class="table-body">
-                            <div v-for="(student, index2) in item.data" :key="index2" class="stu-card">
-                                <div class="stu-icon" v-if="itemDetail.jflx == 0">
-                                    <img src="../../../assets/nan1.png" alt="" v-if="student.xb == 1 && student.isEnter == false">
-                                    <img src="../../../assets/nan2.png" alt="" v-if="student.xb == 1 && student.isEnter == true">
-                                    <img src="../../../assets/nv1.png" alt="" v-if="student.xb == 2 && student.isEnter == false">
-                                    <img src="../../../assets/nv2.png" alt="" v-if="student.xb == 2 && student.isEnter == true">
-                                </div>
-                                <div class="stu-icon" v-if="itemDetail.jflx == 1" @click="ljlClick(student)">
-                                    <img src="../../../assets/nan1.png" alt="" v-if="student.xb == 1 && student.sz == 0">
-                                    <img src="../../../assets/nan2.png" alt="" v-if="student.xb == 1 && student.sz == 1">
-                                    <img src="../../../assets/nv1.png" alt="" v-if="student.xb == 2 && student.sz == 0">
-                                    <img src="../../../assets/nv2.png" alt="" v-if="student.xb == 2 && student.sz == 1">
-                                </div>
-                                <div class="stu-icon" v-if="itemDetail.jflx == 2">
-                                    <img src="../../../assets/nan1.png" alt="" v-if="student.xb == 1 && student.xf == 0">
-                                    <img src="../../../assets/nan2.png" alt="" v-if="student.xb == 1 && student.xf > 0">
-                                    <img src="../../../assets/nv1.png" alt="" v-if="student.xb == 2 && student.xf == 0">
-                                    <img src="../../../assets/nv2.png" alt="" v-if="student.xb == 2 && student.xf > 0">
-                                </div>
-                                
-                                
-                                <div class="stu-desc">{{student.xm}}</div>
-                                <div class="stu-desc" v-if="itemDetail.jflx == 0">成绩：{{student.sz}}</div>
-                                <div class="stu-desc" v-if="itemDetail.jflx == 1">累积：{{student.sz}}</div>
-                                <div class="stu-desc" v-if="itemDetail.jflx == 2">学分：{{student.xf}}</div>
-                                <el-button type="primary" class="stu-btn" v-if="student.isEnter == false && itemDetail.jflx == 0 && (rwList[dataIndex].zt == 0 || rwList[dataIndex].yxbc == 1)" @click.stop="addCj(student)">录入</el-button>
-                                <el-button type="primary" class="stu-btn" v-if="student.isEnter == true && itemDetail.jflx == 0 && (rwList[dataIndex].zt == 0 || rwList[dataIndex].yxbc == 1)" @click.stop="updateCj(student)">编辑</el-button>
-                                <el-input-number v-inputDisabled class="stu-btn" :disabled="btnloading" v-model="student.xf" v-if="itemDetail.jflx == 2  && (rwList[dataIndex].zt == 0 || rwList[dataIndex].yxbc == 1)" @change="changeXf(student)" :min="0" :max="currentRw.xf" :step="currentRw.zl" label="当前学分"></el-input-number>
-                            </div>    
-                        </div>   
-                    </el-tab-pane>
-                    <!-- 查看结果-自建 -->
-                    <el-tab-pane :label="item.bjmc" v-for="(item,index) in bjcj" :key="index" v-if="showTable && itemDetail.xmlx == 0">   
-
-                        <div class="table-header">
-                            <el-input placeholder="请输入姓名" v-model="resultQuery.username" class="input-with-select xmfilter right">
-                                <el-button slot="append" icon="el-icon-search" @click="queryResult"></el-button>
-                            </el-input>
-                            <el-select v-model="resultQuery.sort" class="mright right" @change="queryResult">
-                                <el-option value=0 label="全部"></el-option>
-                                <el-option value=1 label="按录入时间排序"></el-option>
-                                <el-option value=2 label="按成绩排序"></el-option>
-                                <el-option value=3 label="按学分排序"></el-option>
-                                <el-option value=4 label="按学号排序"></el-option>
-                            </el-select>
-                            <el-select v-model="resultQuery.kszt" class="mright right" placeholder="是否缺考" @change="queryResult">
-                                <el-option :value="null" label="全部"></el-option>
-                                <el-option value=2 label="是"></el-option>
-                                <el-option value=1 label="否"></el-option>    
-                            </el-select>
+                            <el-table class="levelTable" :data="item.data" border style="width: 100%" v-if="itemDetail.jflx != 4">
+                                <el-table-column type="index" label="序号" width="80"></el-table-column>
+                                <el-table-column prop="xm" label="姓名"></el-table-column>
+                                <el-table-column label="分值" v-if="itemDetail.jflx==0||itemDetail.jflx==1">
+                                    <template slot-scope="scope">
+                                        <div class="inpBSign">
+                                            <el-input v-model="scope.row.sz" placeholder="请输入内容" clearable @blur="inpBlur($event,scope.row)"></el-input>
+                                            <i class="singico" :class="scope.row.lrsure==0?'':(scope.row.lrsure==1?'el-icon-check':'el-icon-close')"></i>
+                                            <span v-if="itemDetail.jflx==1&&scope.row.lrsure==2" class="red">累积量只能为0或1</span>
+                                        </div>
+                                    </template>
+                                </el-table-column>         
+                                <el-table-column label="加减值" v-if="itemDetail.jflx==7">
+                                    <template slot-scope="scope">
+                                        <el-input-number @change="changeXf(scope.row)" v-inputDisabled v-model="scope.row.sz" :precision="1" :step="currentRw.zl" :max="currentRw.xf"></el-input-number>
+                                    </template>
+                                </el-table-column>         
+                                <el-table-column label="等级" v-if="itemDetail.jflx==3">
+                                    <template slot-scope="scope">
+                                        <el-input :ref="scope.row.ref" maxlength="1" v-model="scope.row.djz" placeholder="请输入内容" 
+                                            @keyup.native="down2next($event,scope.row)">
+                                        </el-input>
+                                    </template>
+                                </el-table-column>     
+                                <el-table-column label="数值" v-if="itemDetail.jflx==5">
+                                    <template slot-scope="scope">
+                                        <div class="inpBSign">
+                                            <el-input v-model="scope.row.sz" placeholder="请输入内容" clearable @blur="inpBlur($event,scope.row)" @clear="inpClearsz($event,scope.row)"></el-input>
+                                            <i class="singico" :class="scope.row.lrsure==0?'':(scope.row.lrsure==1?'el-icon-check':'el-icon-close')"></i>
+                                        </div>
+                                    </template>
+                                </el-table-column> 
+                                <el-table-column label="学分" v-if="itemDetail.jflx==5">
+                                    <template slot-scope="scope">
+                                        <div class="inpBSign">
+                                            <el-input v-model="scope.row.xf" placeholder="请输入内容" clearable @blur="inpBlurxf($event,scope.row)" @clear="inpClearxf($event,scope.row)"></el-input>
+                                            <i class="singico" :class="scope.row.lrsure_xf==0?'':(scope.row.lrsure_xf==1?'el-icon-check':'el-icon-close')"></i>
+                                        </div>
+                                    </template>
+                                </el-table-column>       
+                            </el-table>
+                            <el-tabs v-if="itemDetail.jflx == 4"  v-model="activeStuName">
+                                <el-tab-pane :label="student.xm" v-for="(student, index2) in item.data" :key="index2" :name="student.index">
+                                    <el-row class="twIndRowheader" :gutter="20">
+                                        <!-- <el-col :span="2">序号</el-col> -->
+                                        <el-col :span="3">分值</el-col>
+                                        <el-col :span="9">评语</el-col>
+                                        <el-col :span="12">图片</el-col>
+                                        <!-- <el-col :span="2">操作</el-col> -->
+                                    </el-row>
+                                    <el-row class="twIndRow" :gutter="20" v-for="(twinfo, indtw) in student.twInfo" :key="indtw" v-if="indtw == 0">
+                                        <!-- <el-col :span="2">
+                                            <span class="twIndspan">{{indtw+1}}</span>
+                                        </el-col> -->
+                                        <el-col :span="3">
+                                            <el-input v-model="twinfo.fz" placeholder="0"></el-input>
+                                        </el-col>
+                                        <el-col :span="9">
+                                            <el-input v-model="twinfo.twnr" placeholder="请输入评语"></el-input>
+                                        </el-col>
+                                        <el-col :span="10">
+                                            <div :class="{'on':(twinfo.twlrCurNum==3)}">
+                                                <el-upload
+                                                    list-type="picture-card"
+                                                    action="/api/netcore/smartcredit/v1/Xmcj/UploadPictures"
+                                                    :headers= "headers"
+                                                    :limit="3"
+                                                    :on-preview="handlePictureCardPreview"
+                                                    :on-remove="(file,fileList)=>{return handlePictureRemove(file,fileList,twinfo)}"
+                                                    :on-exceed="handleExceed"
+                                                    :on-success="(res,file,fileList)=>{return uploadSuccessPic(res,file,fileList,twinfo)}"
+                                                    :before-upload="BatchbeforeUploadPicture"
+                                                    :file-list="twinfo.tpdzList">
+                                                    <i class="el-icon-plus"></i>
+                                                </el-upload>
+                                                <el-dialog :visible.sync="dialogPictureVisible">
+                                                    <img width="100%" :src="dialogImageUrl" alt="">
+                                                </el-dialog>                                            
+                                            </div>
+                                        </el-col>
+                                        <!-- <el-col :span="2">
+                                            <el-button type="text" v-if="indtw!=(student.twInfo.length-1)" @click="twDel(student,index,index2,indtw)">删除</el-button>
+                                            <el-button type="text" v-if="indtw==(student.twInfo.length-1)" @click="twAdd(student)">添加</el-button>
+                                        </el-col> -->
+                                    </el-row>
+                                    <el-row class="twIndRow">
+                                        <el-button type="primary" @click="twSure(student)" >保 存</el-button>
+                                    </el-row>
+                                </el-tab-pane>
+                            </el-tabs>                            
+                            <div v-if="itemDetail.jflx == 6">
+                                <div class="empty-table">教师端无权限</div>
+                            </div>
                         </div>
-
-                        <!-- 自建项目 -->
-                        <el-table :data="index==cjIndex?resultData:[]" border style="width: 100%" v-if="itemDetail.xmlx == 0">
-                            <el-table-column prop="xh" label="学号">
-                            </el-table-column>
-                            <el-table-column prop="xm" label="姓名">
-                            </el-table-column>
-                            <el-table-column prop="rwztdesc" label="状态">
-                            </el-table-column>
-                            <el-table-column v-if="itemDetail.jflx == 0" label="成绩">
-                                <template slot-scope="scope">
-                                     <span v-bind:class="{blue: (scope.row.bccj == 1)}">{{ scope.row.sz }}</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column v-if="itemDetail.jflx != 1" prop="xf" label="学分">
-                            </el-table-column>
-                            <el-table-column v-if="itemDetail.jflx == 1" prop="xf" label="累计学分">
-                            </el-table-column>
-                            <el-table-column prop="ksztdesc" label="备注">
-                            </el-table-column>                        
-                        </el-table>
-           
                     </el-tab-pane>
-                    <!-- 查看结果-系统 -->
-                    <el-tab-pane :label="item.bjs.bjmc" v-for="(item,index) in resultData" :key="index" v-if="showTable && itemDetail.xmlx != 0">
-                        
-                        <!-- 阅读考级 -->
-                        <el-table :data="item.ydkjResults" border style="width: 100%" v-if="itemDetail.xmlx == 1">
-                            <el-table-column prop="xm" label="姓名">
-                            </el-table-column>
-                            <el-table-column label="性别">
-                                 <template slot-scope="scope">
-                                     <span v-if="scope.row.xb == 0">未知的性别</span>
-                                     <span v-if="scope.row.xb == 1">男</span>
-                                     <span v-if="scope.row.xb == 2">女</span>
-                                     <span v-if="scope.row.xb == 9">未说明的性别</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="sm" label="书名">
-                            </el-table-column>
-                            <el-table-column label="是否必读">
-                                 <template slot-scope="scope">
-                                     <span v-if="scope.row.sfbd == 0">必读</span>
-                                     <span v-if="scope.row.sfbd == 1">选读</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="是否通过">
-                                 <template slot-scope="scope">
-                                     <span v-if="scope.row.sftg == 0">不通过</span>
-                                     <span v-if="scope.row.sftg == 1">通过</span>
-                                </template>
-                            </el-table-column>                      
-                        </el-table> 
-                        
-                        <!-- 激励卡 -->
-                        <el-table :data="item.jlkResults" border style="width: 100%" v-if="itemDetail.xmlx == 2">
-                            <el-table-column prop="xm" label="姓名">
-                            </el-table-column>
-                            <el-table-column label="性别">
-                                <template slot-scope="scope">
-                                     <span v-if="scope.row.xb == 0">未知的性别</span>
-                                     <span v-if="scope.row.xb == 1">男</span>
-                                     <span v-if="scope.row.xb == 2">女</span>
-                                     <span v-if="scope.row.xb == 9">未说明的性别</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="kpxMc" label="考评项名称">
-                            </el-table-column>
-                            <el-table-column prop="zc" label="周次">
-                            </el-table-column>
-                            <el-table-column prop="fksj" label="发卡时间">
-                            </el-table-column>
-                            <el-table-column prop="py" label="评语">
-                            </el-table-column>
-                            <el-table-column prop="fkrxm" label="发卡人">
-                            </el-table-column>
-                        </el-table> 
 
-                        <!-- 德育评分 -->
-                        <el-table :data="item.dypfResults" border style="width: 100%" v-if="itemDetail.xmlx == 3">
-                            <el-table-column prop="xm" label="姓名">
-                            </el-table-column>
-                            <el-table-column label="性别">
-                                <template slot-scope="scope">
-                                     <span v-if="scope.row.xb == 0">未知的性别</span>
-                                     <span v-if="scope.row.xb == 1">男</span>
-                                     <span v-if="scope.row.xb == 2">女</span>
-                                     <span v-if="scope.row.xb == 9">未说明的性别</span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column prop="kpxMc" label="考评项名称">
-                            </el-table-column>
-                            <el-table-column prop="zc" label="周次">
-                            </el-table-column>
-                            <el-table-column prop="df" label="得分">
-                            </el-table-column>
-                            <el-table-column prop="khsj" label="考核时间">
-                            </el-table-column>
-                            <el-table-column prop="glrxm" label="管理人">
-                            </el-table-column>                         
-                        </el-table> 
-                    </el-tab-pane>
                 </el-tabs>
             </div>
 
         </el-col>
     </el-row>
 
+    <!-- 班级选择弹层 -->
+    <el-dialog width="440px" :visible.sync="bjDialogVisible" append-to-body :before-close="bjCancel">
+        <el-row>
+            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+            <div style="margin: 15px 0;"></div>
+            <el-checkbox-group v-model="bjidSelect" class="select-item" style="float:left; margin:0 5px;" @change="handleCheckedChange">
+                <el-checkbox v-for="(item,index) in bjList" :label="item.uuid" :key="index" border size="medium">{{item.bj}}</el-checkbox>
+            </el-checkbox-group>
+        </el-row>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="bjSubmit">确 定</el-button>
+            <el-button @click="bjReset">重 置</el-button> 
+        </div>
+    </el-dialog>
 
     <!-- 新建任务弹层 -->
-    <el-dialog :title="textMap[dialogStatus]"  :visible.sync="createFormVisible" width="500px" :before-close="createCancel">
-        <!-- 班级选择弹层 -->
-        <el-dialog width="440px" :visible.sync="bjDialogVisible" append-to-body :before-close="bjCancel">
-            
-            <el-row>
-                <el-col :span="8" v-for="(item,index) in bjList" :key="index" class="select-item">
-                    <el-checkbox v-model="bjidSelect" :label="item.uuid" border size="medium">{{item.bj}}</el-checkbox>
-                </el-col>
-            </el-row>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="bjSubmit">确 定</el-button>
-                <el-button @click="bjReset">重 置</el-button> 
-            </div>
-        </el-dialog>
+    <el-dialog :title="textMap[dialogStatus]"  :visible.sync="createFormVisible" width="600px" :before-close="createCancel">
         <!-- 新建任务表单 -->
-        <el-form :model="form" ref="createform" label-width="100px" :rules="rules">
+        <el-form :model="form" ref="createform" label-width="120px" :rules="rules"> 
+            <el-form-item label="所属项目">{{itemDetail.mc}}</el-form-item>  
             <el-form-item label="任务名称"  prop="mc">
                 <el-input v-model="form.mc"></el-input>
             </el-form-item>
-            <el-form-item label="任务学分"  v-if="itemDetail.jflx == 2" prop="xf">
-                <el-input v-model.number="form.xf"></el-input>
+            <el-form-item label="任务最高值" prop="xf" v-if="itemDetail.jflx==0 || itemDetail.jflx==7">
+                <el-input v-model="form.xf" :disabled="isChange"></el-input>
             </el-form-item>
-            <el-form-item label="项目名称">
-                {{itemDetail.mc}}
-            </el-form-item>
+            <el-form-item label="加减幅度" v-if="itemDetail.jflx == 7" prop="zl">
+                <el-select v-model="zfzl" placeholder="请选择" size="small" @change="zlrsdf(zfzl)"  :disabled="isChange">
+                    <el-option v-for="item in zlRange" :key="item" :label="item" :value="item"></el-option>
+                </el-select>
+            </el-form-item>   
             <el-form-item label="执行班级" required>
-                <el-tag v-for="(bjItem, index) in bjid" :key="index" closable @close="delBj(index)" class="mright">
+                <el-tag v-for="(bjItem, index) in bjid" :key="index" :closable="!isChange" @close="delBj(index)" class="mright">
                     {{bjItem.bj}}
                 </el-tag>
-                <el-button type="text" icon="el-icon-circle-plus-outline" @click="bjDialogVisible = true"></el-button>
+                <el-button type="text" icon="el-icon-circle-plus-outline" @click="clickBjsel"  :disabled="isChange"></el-button>
             </el-form-item>
-            
-            <el-form-item label="学分值" required v-if="itemDetail.jflx == 2">
-                <div>
-                    <el-switch
-                        v-model="formToggle"
-                        active-color="#13ce66"
-                        inactive-color="#ff4949">
-                    </el-switch>
-                    根据完成情况直接给予最高任务学分
-                </div>
-                <!-- <div>
-                    <el-input-number size="small" :disabled="formToggle" v-model="form.zl" controls-position="right" :min="0.5"></el-input-number>
-                </div> -->
+            <el-form-item label="录入人员" required>
+                <el-checkbox-group v-model="lrrylxList">
+                    <el-checkbox label='1' disabled="">教师</el-checkbox>
+                    <el-checkbox label='2' v-if="false">学生</el-checkbox>
+                    <el-checkbox label='4' v-if="false">家长</el-checkbox>
+                </el-checkbox-group>
             </el-form-item>
-            <el-form-item label="增幅" v-if="itemDetail.jflx == 2 && formToggle == false" prop="zl">
-                <el-select v-model="form.zl" placeholder="请选择" size="small" :disabled="formToggle">
-                    <el-option
-                    v-for="item in zlRange"
-                    :key="item"
-                    :label="item"
-                    :value="item">
-                    </el-option>
-                </el-select>
+            <el-form-item label="共有任务" required>
+                <el-radio v-model="sfggrw" label='1' :disabled="isChange">是</el-radio>
+                <el-radio v-model="sfggrw" label='0' :disabled="isChange">否（不计入项目总分，他人不可见）</el-radio>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="createSubmit('createform')" :disabled="rwBtnLimit">保 存</el-button>
+            <el-button type="primary" @click="createSubmit('createform')" :disabled="btnLimt">保 存</el-button>
             <el-button @click="createCancel">取 消</el-button> 
         </div>
     </el-dialog>
 
-    <!-- 成绩录入 -->
-    <el-dialog title="录入成绩"  :visible.sync="addCjVisible" width="700px" :before-close="addCjCancel">
-        <el-form :model="cjform" ref="addCjform" label-width="100px" :rules="rules">
-            <el-form-item label="学号" required>
-                <el-input disabled :value="currentStu.xh"></el-input>
-            </el-form-item>
-            <el-form-item label="学生姓名" required>
-                <el-input disabled :value="currentStu.xm"></el-input>
-            </el-form-item>
-            <el-form-item label="班级" required>
-                <el-input disabled :value="currentStu.bjmc"></el-input>
-            </el-form-item>
-            <el-form-item label="是否缺考" required>
-                <el-radio v-model="kszt" label='2'>是</el-radio>
-                <el-radio v-model="kszt" label='0'>否</el-radio>
-            </el-form-item>
-            <el-form-item label="成绩" v-if="kszt==0" prop="sz">
-                <el-input v-model.number="cjform.sz"></el-input><br/>
-            </el-form-item>
-            <el-form-item label="" required>
-                <el-checkbox v-model="continueAdd" v-if="currentStu.next">创建另一个</el-checkbox> 
-            </el-form-item>        
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="submitCj('addCjform')" :disabled="cjBtnLimit">保 存</el-button>
-            <el-button @click="addCjCancel">取 消</el-button> 
-        </div>
-    </el-dialog>
-
-     <!-- 成绩在线导入 -->
+    <!-- 任务在线导入 -->
     <el-dialog title="成绩导入" :visible.sync="importCjFormVisible" width="540px" :before-close="importCancel" class="import_box">
         <el-row>
-            <el-col :span="6" style="line-height:32px">
-                文件选择：
-            </el-col>
+            <el-col :span="6" style="line-height:32px">文件选择：</el-col>
             <el-col :span="18">
-                <el-upload
-            
-                :limit="1"
-                name="excelfile"   
-                ref="cjForm"
-                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                action="/api/netcore/smartcredit/v1/Xmcj/ImportExcel"
-                :headers= headers
-                :file-list="fileList"
-                :onError="uploadError"
-                :onSuccess="uploadSuccess"
-                :before-upload="beforeUpload"
-                :auto-upload="false">
-                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                <el-upload          
+                    :limit="1"
+                    name="excelfile"   
+                    ref="cjForm"
+                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    action="/api/netcore/smartcredit/v1/Xmcj/ImportExcel"
+                    :headers= "headers"
+                    :file-list="fileList"
+                    :onError="uploadError"
+                    :onSuccess="(res,file,fileList)=>{return uploadSuccess(res,file,fileList,'rw')}"
+                    :before-upload="beforeUpload"
+                    :auto-upload="false">
+                    <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                 </el-upload>
             </el-col>  
         </el-row>
@@ -471,7 +311,61 @@
             <el-button size="medium" type="primary" @click="importSubmit('cjForm')" :loading="importLoading">确 定</el-button>
             <el-button size="medium" @click="importCancel">取 消</el-button> 
             <el-button size="medium" @click="importMb">模版生成<i class="el-icon-download"></i></el-button> 
+            <el-row class="import_desc">
+                <el-col :span="6" style="line-height:80px">
+                    操作说明：
+                </el-col>
+                <el-col :span="18">
+                    <p>1.请使用本页面提供的模版进行导入</p>
+                    <p>2.请勿修改模版Excel的表头内容</p>
+                    <p>3.模版提供的默认信息，请勿随意修改</p>
+                </el-col>               
+            </el-row>
+        </div>
+        
+    </el-dialog>
+    
 
+    <!-- 项目在线导入 -->
+    <el-dialog width="440px" title="项目导入" :visible.sync="DialogVisibleTips">
+        <p>该操作仅限项目导入，导入前需创建好所有任务，确定全部创建完成？</p>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="TipsSure">确 定</el-button>
+            <el-button @click="DialogVisibleTips = false">取 消</el-button> 
+        </div>
+    </el-dialog>
+    <el-dialog title="项目导入" :visible.sync="BatchimportCjFormVisible" width="540px" :before-close="BatchimportCancel" class="import_box">        
+        <el-row style="margin-bottom:10px;">
+            <el-col :span="6" style="line-height:32px">执行班级:</el-col>
+            <el-col :span="18">
+                <el-select v-model="BatchSelClass" size="small"  placeholder="请选择">
+                    <el-option v-for="item in bjList" :key="item.uuid" :label="item.bj" :value="item.uuid"></el-option>
+                </el-select>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6" style="line-height:32px">文件选择：</el-col>
+            <el-col :span="18">
+                <el-upload
+                    :limit="1"
+                    name="excelfile"   
+                    ref="BatchcjForm"
+                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    action="/api/netcore/smartcredit/v1/Xmcj/BatchImportExcel"
+                    :headers= "headers"
+                    :file-list="fileList"
+                    :onError="uploadError"
+                    :onSuccess="(res,file,fileList)=>{return uploadSuccess(res,file,fileList,'xm')}"
+                    :before-upload="beforeUpload"
+                    :auto-upload="false">
+                    <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                </el-upload>
+            </el-col>  
+        </el-row>
+        <div slot="footer" class="dialog-footer">
+            <el-button size="medium" type="primary" @click="importSubmit('BatchcjForm')" :loading="importLoading">确 定</el-button>
+            <el-button size="medium" @click="BatchimportCancel">取 消</el-button> 
+            <el-button size="medium" @click="BatchimportMb">模版生成<i class="el-icon-download"></i></el-button> 
             <el-row class="import_desc">
                 <el-col :span="6" style="line-height:80px">
                     操作说明：
@@ -486,215 +380,9 @@
         
     </el-dialog>
 
-  </div>
+</div>
 </template>
 
-<style lang="scss">
-// 通用样式
-.left {
-    float: left;
-}
-.right {
-    float: right;
-}
-.mright {
-    margin-right: 15px;
-}
-.selectedRow {
-    background-color: #ecf3fe !important;
-    td:nth-child(1) {
-        background: #4787f1 !important;
-    }
-}
-.blue {
-    color: blue;
-}
-
-//ui框架部分样式修改
-.el-input-number .el-input__inner {
-    padding: 0 !important;
-}
-.el-input-number__decrease, .el-input-number__increase {
-    width: 30% !important;
-}
-
-.body {
-    background: #eceff1;
-    // 项目详情描
-    .detail {
-        background: #fff;
-        display: flex;
-        .detail-box {
-            width: 0;
-            flex-grow: 1;
-            &:nth-child(n+2) {
-                margin-left: -1px;
-            }
-            line-height: 40px;
-            border: 1px solid #eceff1;
-            border-bottom: none; 
-            .detail-title {
-                padding-left: 20px;
-                font-weight: 500;  
-                border-bottom: 1px dashed #eceff1; 
-            }
-            .detail-content {
-                padding-left: 20px;
-                .content-title {
-                    color: #758a9d;
-                }
-            }
-        }
-    }
-    .detail-pull {
-        margin-bottom: 30px;
-        .detail-pullbtn {
-            background: #f7f8fa;
-            width: 100%;
-        } 
-    }
-
-    // 任务列表
-    .rw-table {
-        .rw-header {
-            margin-bottom: 10px;
-            padding-left: 20px; 
-            height: 40px;
-            line-height: 40px;
-        }
-        .rw-body { 
-            background: #fff;
-            .update-btn {
-                color: #ff9703;
-            }
-            .delete-btn {
-                color: #4cb04e;
-            }
-        }
-    }
-
-    // 成绩|结果 列表
-    .cj-table {
-        .empty-table {
-            height: 172px;
-            margin-top: 50px;
-            line-height: 172px;
-            text-align: center;
-            background: #fbfbfd;
-            font-size: 20px; 
-        }
-
-        .cj-header {
-            position: relative;
-            margin-bottom: 10px;
-            height: 40px;
-            .yxbc-style {
-                position: absolute;
-                right: 28px;
-                bottom: -46px;
-                z-index: 9;
-            }
-        }
-
-        .cj-body {
-            .table-notice {
-                background-color: rgb(255, 236, 129);
-                padding: 0 10px;
-                border-radius: 10px; 
-                .notice-icon {
-                    padding: 8px 0;
-                    border: none;
-                    font-size: 24px;
-                }
-                height: 40px;
-                overflow: hidden;
-                .notice-msg {
-                    overflow: hidden;
-                    line-height: 40px;
-                    width: 697px;
-                    transition: width 1s;
-                }
-            }
-            .table-header {
-                height: 40px;
-                line-height: 40px;
-                margin-bottom: 15px;
-                .xmfilter {
-                    width: 250px;
-                }
-            }
-            .table-body{
-                .stu-card {
-                    &:hover .stu-btn {
-                        display: block;
-                    }
-                    &:hover {
-                        background: #dde8f7; 
-                    }
-                    cursor: pointer;
-
-                    float: left;
-                    position: relative;
-                    box-sizing: border-box; 
-                    height: 220px;
-                    width: calc((100% - 90px)/7);
-                    font-size: 16px;  
-                    text-align: center;  
-                    background: #f5f7fa; 
-                    margin-bottom: 15px;          
-                    margin-right: 15px;
-                    &:nth-child(7n) {
-                        margin-right: 0;
-                    }
-    
-                    .stu-icon {
-                        padding: 15px 5px 5px 5px;
-                        img {
-                            width: 75%;
-                            height: 75%;
-                        }
-                    }
-                    .stu-desc {
-                        line-height: 40px;
-                    }
-                    .stu-btn {
-                        width: 100%;
-                        position: absolute;
-                        bottom: 0;
-                        
-                        border-radius: 0;
-                        display: none;
-                        
-                    }   
-                }
-            }
-        }
-    }
-
-    // 新建任务-班级选择项
-    .select-item {
-        margin-bottom: 10px; 
-    }
-
-    //在线导入
-    .import_box {
-        .import_body {
-            overflow: hidden;
-        }
-        .import_desc {
-            overflow: hidden;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #ccc;
-            text-align: left;
-        }
-    }
-
-}
-
-
-
-</style>
 
 <script>
 import Cookies from 'js-cookie'
@@ -714,9 +402,10 @@ import {
     scoreReported,
     dealAllowSupplement,
     exportExcel,
+    BatchexportExcel,
     getBj,
     GetXmStatistics,
-    CheckXtResult,
+    CheckXtResult, BatchInputValue ,UploadPictures,DeleteCreditValue,CurrencyReport
     // importExcel,
 } from 'api/project/projectDetail/index'
 import { 
@@ -726,669 +415,809 @@ import {
 
 
 export default {
-  name: "projectDetail",
-  components: {
-    
-  },
-  data() {
-    return {
-        lguserType: localStorage.getItem('lguserType'),
-        listLoading: true,
-        listQuery: {
-            pageIndex: 1,
-            pageSize: 10,
-            xmid: window.localStorage.getItem('xmid'),
-            xxdm: window.localStorage.getItem('xxdm'),
-        },
-        itemDetail: {},
-        showPull: true,
-        xnxq: {},
-        rwList: [],
-        yxbc: false,
-        total: null,
-        jflx: ['成绩换算','累计量换算','学分'],
-        
-        textMap: {
-            create: '新建任务',
-            update: '修改任务',
-        },
-        dialogStatus: '',
-        createFormVisible: false,
-        form: {},
-        formToggle: true,
+    name: "projectDetail",
+    data() {
+        return {
+            xxlm: window.localStorage.getItem('xxlm'),                //学校类型   007--职高  
+            listLoading: true,
+            listQuery: {
+                pageIndex: 1,
+                pageSize: 10,
+                xmid: window.localStorage.getItem('xmid'),
+                xxdm: window.localStorage.getItem('xxdm'),
+            },
+            itemDetail: {},                     //所属项目的信息
+            showPull: true,
+            xnxq: {},
+            jflxsel:['原始数据换算成积分','原始数据换算成等级','保留原始数据，不做换算'],
+            jflx: ['成绩分值','累积任务数','学分','等级','图文评语','体育数据','阅读','加减分'], 
+            rwList: [],                         //任务List
+            total: null,                        //任务的总数
+            rwid: null,                         //当前所选任务id
+            dataIndex: 0,                       //当前所选任务的index
+            form: {},
 
-        showNotice: true,
-        noticeWidth: 0,
-
-        bjid: [],       //实时展示的班级代码（uuid + bj）
-        bjidBeifen: [], //班级代码备份
-        bjidSelect: [], //当前选中班级代码
-        bjList: [],     //所有的班级代码
-        bjidArr: [],    //所有班级代码value组成的数组
-        bjDialogVisible: false,
-        bjDialogStatus: '',
-
-        rwid: null,
-        dataIndex: 0, //当前展示的数据的编号
-        showTable: false,
-        
-        /*成绩录入页*/
-        bjcj: [],
-        cjIndex: '0', //当前展示的成绩的班级序号
-        kszt: '0',
-        addCjVisible: false,
-        cjform: {},
-        currentStu: {}, //当前录入成绩的学生
-        continueAdd: false, //继续录入学生
-
-        
-        /*结果页*/
-        resultData: [],
-        resultQuery: {}, 
-
-
-        // 按钮多次提交BUG限制
-        rwBtnLimit: false,
-        cjBtnLimit: false,
-        btnloading: false,
-
-
-        //表单较检规则
-        rules: {
-          mc: [
-            { required: true, message: '请输入任务名称', trigger: 'blur' },
-          ],
-          xf: [
-            { required: true, message: '请输入任务学分', trigger: 'blur' },
-            { type: 'number', message: '学分必须为数字值' },
-          ],
-          zl: [
-            { required: true, message: '请选择增幅', trigger: 'change' },
-          ],
-          sz: [
-            { required: true, message: '请输入成绩', trigger: 'blur' },
-            { type: 'number', message: '成绩必须为数字值' },
-          ],
-        },
-
-        //成绩在线导入
-        importCjFormVisible: false,
-        fileList: [],
-        importLoading: false,
-
-    } 
-  },  
-  created() {
-    this.getItemDetail();
-    this.dqXnXqObj();
-  },
-//   filters: {
-//     ljlxmfilter: function(student) {
-//         return student.xm + '累积'    
-//     }
-//   },
-  directives: {
-    inputDisabled: {
-        inserted: function (el) {
-            console.log(el.children[2].children[0])
-            el.children[2].children[0].setAttribute("readonly",true)
-
-        }
-    }
-  },
-  computed: {
-    ...mapGetters(["elements"]),
-
-    headers: function() {
-        console.log(Cookies)
-        return {Authorization: Cookies.get("Admin-Token")}
-    },
-
-    //未上报任务（数组）
-    unfinishedRw :function() {
-        let unfinishedRw = [];
-        this.rwList.forEach(function(item, index){
-            let cjsjTime = new Date(item.cjsj).getTime();
-            let currentTime = new Date().getTime();
-            if(item.zt == 0 && currentTime - cjsjTime < 604800000) {
-                unfinishedRw.push(item)
-            }
-        })
-        console.log(unfinishedRw);
-        return unfinishedRw;
-    },
-    //当前选中任务
-    currentRw: function() {
-        return this.rwList[this.dataIndex];
-    },
-    //当前任务总学分
-    totalXf :function() {
-        let xf = 0;
-        for(let i = 0; i < this.rwList.length; i++) {
-            xf += Number(this.rwList[i].xf);
-        }
-        return xf;
-    },
-    zlRange: function() {
-        let zlArr = [0.1,0.5]
-        for(let i = 1; i <= this.form.xf; i++) {
-            if(this.form.xf % i == 0) {
-                zlArr.push(i)
-            }
-        }
-        return zlArr;
-    },
-  },
-  methods: {
-    getList() {
-        // let loadingInstance = Loading.service({
-        //     target: document.querySelector(".main-container"),
-        //     background: 'rgba(255, 255, 255, 0.6)',
-        // });
-        // document.querySelector("body").style.overflow="hidden"
-        
-        page(this.listQuery).then(response => {
-
-            // let _this = this
-            // setTimeout(function(){
-            //     _this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
-            //         loadingInstance.close();
-            //     });
-            //     document.querySelector("body").style.overflow="auto"
-            // },1200)
+            // 任务弹层
+            textMap: {
+                create: '新建任务',
+                update: '修改任务',
+            },
+            dialogStatus: '',
+            createFormVisible: false,            
+            lrrylxList:['1'],               //录入人员              1-教师    2-学生    3-学生+教师  4-家长
+            sfggrw:'1',                     //是否公共任务
+            zfzl:'',                        //增量
+            isChange:false,                 //任务是否可以修改
             
+            bjDialogVisible: false,                    //选择班级的弹层
+            isIndeterminate: false,                      //全选           
+            checkAll:false,                             //全选  
+            bjList: [],                                //所有的班级List
+            bjidSelect: [],                            //当前选中班级代码
+            bjidArr: [],    //所有班级代码value组成的数组
+            bjid: [],       //实时展示的班级代码（uuid + bj）
+            bjidBeifen: [], //班级代码备份
+            btnLimt: false, //防止重复提交BUG
+            
+            
+            //表单较检规则
+            rules: {
+                mc: [
+                    { required: true, message: '请输入任务名称', trigger: 'blur' },
+                    { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
+                ],
+                xf: [
+                    { required: true, message: '请输入任务学分', trigger: 'blur' },
+                ],
+                zl: [
+                    { required: true, message: '请选择增幅', trigger: 'change' },
+                ],
+                sz: [
+                    { required: true, message: '请输入成绩', trigger: 'blur' },
+                ],
+            },
 
-            console.log(response)
-            this.rwList = response.list; 
-            this.bjcj = [];   
-            this.total = response.totalCount;
-            this.showTable = this.itemDetail.xmlx ==  0 ? false : true
+            /*成绩录入页*/
+            bjcj: [],
+            cjIndex: '0', //当前展示的成绩的班级序号
+            kszt: '0',
+            addCjVisible: false,
+            cjform: {},
+            currentStu: {}, //当前录入成绩的学生
+            continueAdd: false, //继续录入学生
+            ischangeXf:false,   //录入无增量学分是否有变动
 
-            if(this.rwList && this.rwList[0] && this.rwList[0].uuid) {
-                this.listLoading = false
-                this.dataIndex = 0
-                this.cjIndex = '0'
-                this.rwid = this.rwList[0].uuid
-                if(this.showTable) {
-                    this.queryResult()
-                }else {
-                    this.getBjCj(this.rwList[0].uuid)
-                }
-                
-            }                
-        })
- 
-    },
-    getItemDetail() {
-        getItem({
-            id: this.listQuery.xmid
-        }).then(response => {
-            this.itemDetail = response
-            this.getAllBj() //加载所有班级
-            this.getList()
-        })
-    },
+            // 项目在线导入
+            DialogVisibleTips:false,
+            BatchimportCjFormVisible: false,
+            BatchSelClass:'',           //所选的班级
 
-    handleCreate() {
-        this.rwBtnLimit = false
-        // if(this.itemDetail.jflx == 0) {
-        //     let maxValue = this.itemDetail.hs && this.itemDetail.hs[0] && this.itemDetail.hs[0].xf;     
-        //     let rwLimit = Math.floor(this.itemDetail.zgxf/maxValue) 
-        //     if(this.rwList.length == rwLimit) {
-        //         this.$notify({
-        //             title: '提示',
-        //             message: '所有任务累计学分不得超过项目最高学分',
-        //             type: 'warning',
-        //             duration: 2000
-        //         });
-        //         return 
-        //     }   
-        // }
-        this.dialogStatus = 'create';
-        this.createFormVisible = true;
+            // 图文录入
+            dialogPictureVisible: false,
+            dialogImageUrl:'',
+            twlrCurList:[],         //当前编辑的图片list
+            activeStuName:'0',
+            
+            //成绩在线导入
+            importCjFormVisible: false,
+            fileList: [],
+            importLoading: false,
+
+            /*结果页*/
+            resultData: [],           
+
+        } 
+    },  
+    created() {
+        this.dqXnXqObj();
     },
-    //表单内容初始化
-    dataInit() {
-        this.$refs['createform'].resetFields();
-        this.form = {};
-        this.formToggle = true;
-        this.bjid = [];
-        this.bjidBeifen = [];
-        this.bjidSelect = [];
-    },
-    // 取消按钮
-    createCancel() {
-        this.createFormVisible = false;
-        this.dataInit();
-    },
-    // 新建任务表单提交按钮
-    createSubmit(formName) {
-        /*
-		let invalidXf = 0
-        if(this.dialogStatus == 'update') {
-            invalidXf = Number(this.currentRw.xf);
+    directives: {
+        inputDisabled: {                                                //加减分数值
+            inserted: function (el) {
+                el.children[2].children[0].setAttribute("readonly",true)
+            }
         }
-        if(this.itemDetail.jflx == 2 && Number(this.totalXf) - invalidXf + Number(this.form.xf) > this.itemDetail.zgxf) {
+    },
+    computed: {
+        ...mapGetters(["elements"]),
+        headers: function() {
+            return {Authorization: Cookies.get("Admin-Token"),ReturnResultCode:true}
+        },
+        //当前选中任务
+        currentRw: function() {
+            return this.rwList[this.dataIndex];
+        },
+        //加减幅度
+        zlRange: function() {
+            let zlArr = ['0.1','0.5']
+
+            for(let i = 1; i <= this.form.xf; i++) {
+                if(this.form.xf % i == 0) {
+                    zlArr.push(i)
+                }
+            }
+            if(this.currentRw && this.currentRw.xf){
+                if(this.currentRw.xf!=this.form.xf){
+                    this.zfzl = ''
+                }
+            }
+            
+            return zlArr;
+        },
+    },
+    watch:{
+        dataIndex(){                                                //任务切换
+            this.activeStuName = '0'    
+        },
+        createFormVisible(){                                            //支持回车键保存
+            if(this.createFormVisible){
+                var that = this
+                document.onkeydown=function(e){
+                    var theEvent = e || window.event;    
+                    var code = theEvent.keyCode || theEvent.which || theEvent.charCode;    
+                    if (code == 13) {    
+                        that.createSubmit('createform')
+                        return false;    
+                    }    
+                    return true;   
+                }
+            }
+        },        
+    },
+    methods: {
+        //基础信息获取(年级/学年学期/课程)
+        dqXnXqObj() {
+            dqxnxqObj({
+                xxdm: this.listQuery.xxdm,
+            }).then(response => {
+                this.xnxq = response                
+                this.getItemDetail();
+            })
+        },
+        // 获取所属项目的信息
+        getItemDetail() {
+            getItem({
+                id: this.listQuery.xmid
+            }).then(response => {
+                this.itemDetail = response
+                this.getAllBj() //加载所有班级
+                this.getList()  //加载所有任务List
+            })
+        },
+        //加载所在年级的所有班级
+        getAllBj () {
+            getBj({
+                page: 1,limit: 500,
+                xxdm: this.listQuery.xxdm,
+                njdm: this.itemDetail.njdm,
+                jbny: this.xnxq.xn,
+            }).then(response => { 
+                this.bjList = response.data.rows
+                let bjidArr = [];  //班级代码value数组
+                for(let i = 0; i < this.bjList.length; i++) {
+                    bjidArr.push(this.bjList[i].uuid) 
+                }
+                this.bjidArr = bjidArr
+            })
+        },     
+        // 获取所有任务List
+        getList() {
+            page(this.listQuery).then(response => {
+                this.listLoading = false
+                this.rwList = response.list; 
+                this.total = response.totalCount;
+                this.bjcj = [];   
+                if(this.rwList && this.rwList[0] && this.rwList[0].uuid) {                    
+                    // this.dataIndex = 0
+                    // this.cjIndex = '0'                              //当前展示的成绩的班级序号
+                    this.rwid = this.currentRw.uuid
+                    this.getBjCj(this.currentRw.uuid)               //获取所选任务的班级信息          
+                }             
+            })   
+        },
+        // 分页
+        handleCurrentChange(val) {
+            this.listQuery.pageIndex = val;
+            this.getList();
+        },
+        //获取所选任务的班级信息   
+        getBjCj(rwid) {
+            var that = this
+            getCreditList({
+                xmid: this.listQuery.xmid,
+                xxdm: this.listQuery.xxdm,
+                searchbjid:this.listQuery.searchbjid,
+                username:this.listQuery.username,
+                rwid: rwid,
+            }).then(response => {
+                this.bjcj = response
+                for(let i = 0; i < this.bjcj.length; i++) {
+                    for(let j = 0; j < response[i].data.length-1; j++) {
+                        response[i].data[j].next = j+1;
+                        response[i].data[j].numAll = response[i].data.length; 
+                    }
+                    for(let j = 0; j < this.bjcj[i].data.length; j++) { 
+                        that.$set(that.bjcj[i].data[j],'lrsure', 0)
+                        if(that.itemDetail.jflx==5){
+                            that.$set(that.bjcj[i].data[j],'lrsure_xf', 0)
+                        }
+                        response[i].data[j].curData = i;
+                        response[i].data[j].ref = "input"+i+j;
+                        response[i].data[j].index = j+""
+                        if(that.itemDetail.jflx == 4){ 
+                            if(!response[i].data[j].twInfo || response[i].data[j].twInfo.length<1){
+                                response[i].data[j].twInfo =[]
+                                response[i].data[j].twInfo.push({twnr:'',tpdz:'',tpdzList:[],twlrCurNum:0})
+                            }else{
+                                response[i].data[j].twInfo.forEach(function(twLt,twind){
+                                    var imgList = twLt.tpdz?twLt.tpdz.split('|'):[]
+                                    twLt.tpdzList = []
+                                    if(imgList.length>0){
+                                        imgList.forEach(function(imgli,imgindex){
+                                            twLt.tpdzList.push({url:imgli})
+                                        })
+                                    }
+                                    that.$set(twLt,'twlrCurNum', twLt.tpdzList.length)
+                                })
+
+                            }
+                        }
+                    }
+                }
+                // console.log(this.bjcj)
+            })
+        },
+        //提示信息
+        tipsXX(data,xxtype,tit){
             this.$notify({
-                title: '提示',
-                message: '所有任务累计学分不得超过项目最高学分',
-                type: 'warning',
+                title: tit,
+                message: data,
+                type: xxtype,
                 duration: 2000
             });
-            setTimeout(function(){
-                this.rwBtnLimit = false;
-            },1500);
-            return false
-        }
-		*/
-
-	let _this = this
-        this.$refs[formName].validate(valid => {
-            if (valid) {
-                //数据处理
-                this.form.xmid = this.listQuery.xmid
-                this.form.xxdm = this.listQuery.xxdm
-
-                this.rwBtnLimit = true
-
-                this.form.csr = "1";//抄送人----要删除 
-
-                if(this.bjidBeifen.length == 0) {
-                    
-                    this.rwBtnLimit = false;
-                    
-                    this.$notify({
-                        title: '提示',
-                        message: '请选择执行班级',
-                        type: 'warning',
-                        duration: 2000
-                    });
-                    
-                    return false 
-                }
-                this.form.bjid = this.bjidBeifen.join(',')
-                if(this.formToggle && this.itemDetail.jflx == 2) {
-                    this.form.zl = this.form.xf
-                }
-                console.log(this.form) 
-
-                //表单提交
-                switch(this.dialogStatus) {
-                    //更新
-                    case 'update':
-                        updateRw(this.form).then(() => {
-                            this.createFormVisible = false;
-                            this.dataInit();
-                            this.getList();
-                            this.$notify({
-                                title: '成功',
-                                message: '修改成功',
-                                type: 'success',
-                                duration: 2000
-                            });
-                        }).catch(()=>{
-                            setTimeout(function(){
-                                _this.rwBtnLimit = false;
-                            },1500);
-                        })
-                        break;
-                    //创建    
-                    case 'create':
-                        createRw(this.form).then(() => {
-                            this.createFormVisible = false;
-                            this.dataInit();
-                            this.getList();
-                            this.$notify({
-                                title: '成功',
-                                message: '创建成功',
-                                type: 'success',
-                                duration: 2000
-                            });
-                        }).catch(()=>{
-                            setTimeout(function(){
-                                _this.rwBtnLimit = false;
-                            },1500);
-                        })
-                        break;    
-                }
-            } else {
-                return false;
+        },     
+        
+        /********选择班级弹层***********/ 
+        clickBjsel(){
+            this.bjDialogVisible = true
+            switch(this.dialogStatus) {
+                //更新
+                case 'update':
+                    let checkedCount = this.bjid.length 
+                    this.checkAll = checkedCount === this.bjList.length
+                    this.isIndeterminate = checkedCount > 0 && checkedCount < this.bjList.length;
+                    break;
+                //创建    
+                case 'create':
+                    this.checkAll = false
+                    this.isIndeterminate = false
+                    break;
             }
-        });
-    },
-    //修改
-    handleUpdate(item) {
-        console.log('选中项',item)
+        },
+        //取消选择班级弹层
+        bjCancel() {
+            this.bjDialogVisible = false
+            this.bjidSelect = this.bjidBeifen;
+        },  
+        //控制选择的变量
+        handleCheckedChange(value){
+            let checkedCount = value.length;
+            this.checkAll = checkedCount === this.bjList.length;
+            this.isIndeterminate = checkedCount > 0 && checkedCount < this.bjList.length;
+        },       
+        //确定按钮
+        bjSubmit() {
+            this.bjDialogVisible = false
+            let bjid = [];
+            for(let i = 0; i < this.bjidSelect.length; i++) {
+                let index = this.bjidArr.indexOf(this.bjidSelect[i])
+                if(index>=0) {
+                    bjid.push(this.bjList[index])
+                }                
+            }
+            this.bjid = bjid;
+            this.bjidBeifen = this.bjidSelect
+        },
+        //全选
+        handleCheckAllChange(val){
+            this.bjidSelect = val ? this.bjidArr : [];
+            this.isIndeterminate = false;
+        },
+        //重置按钮
+        bjReset() {
+            this.bjidSelect = [];
+            this.checkAll = false
+            this.isIndeterminate = false;
+        }, 
 
-        this.rwBtnLimit = false;
-        this.dialogStatus = 'update';
+        /********任务弹层***********/        
+        //新建按钮
+        handleCreate() {
+            this.btnLimt = false
+            this.dialogStatus = 'create';
+            this.isChange = false
+            this.createFormVisible = true;
+        }, 
+        //取消按钮            
+        createCancel() {
+            this.createFormVisible = false
+            this.dataInit();           
+        },
+        //表单内容初始化
+        dataInit() {
+            this.$refs['createform'].resetFields();
+            this.form = {};
+            this.lrrylxList = ['1']                 //默认录入人员为老师
+            this.sfggrw = '1'                       //默认共有任务为是
+            this.zfzl = ''                          //默认加减幅度为空
+            this.bjid = [];
+            this.bjidBeifen = [];
+            this.bjidSelect = [];
+        },
+        //删除所选班级
+        delBj(index) {
+            this.bjid.splice(index, 1);
+            this.bjidBeifen.splice(index, 1);
+            this.bjidSelect = this.bjidBeifen;
+        },
+        // 加减幅度选择
+        zlrsdf(val){
+            // this.$set(this.form,'zl',val)
+            this.form.zl = val
+        },
+        //提交按钮
+        createSubmit(formName) {
+            let _this = this
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    this.btnLimt = true
+                    this.form.xmid = this.listQuery.xmid
+                    this.form.xxdm = this.listQuery.xxdm
+                    this.form.sfggrw = Number(_this.sfggrw)        //是否公共任务
+                    if(this.bjidBeifen.length == 0) {                                    
+                        this.btnLimt = false;
+                        this.tipsXX("请选择执行班级",'warning','提示');
+                    }
+                    this.form.bjid = this.bjidBeifen.join(',')                  //2018175510101
+                    if(this.form.xf<0 || this.form.xf>500){
+                        this.btnLimt = false;
+                        this.tipsXX("学分为0~500之间",'warning','提示');
+                        return false
+                    }else{
+                        if(this.form.xf<1 && !(/^([0-9]*)+(.[0-9]{1,2})?$/.test(this.form.xf))){
+                            this.btnLimt = false;
+                            this.tipsXX("学分只能有两位小数",'warning','提示');
+                            return false
+                        }
+                        if(this.form.xf>0 && !(/^([1-9][0-9]*)+(.[0-9]{1,2})?$/.test(this.form.xf))){
+                            this.btnLimt = false;
+                            this.tipsXX("学分只能有两位小数且不能以0开始",'warning','提示');                            
+                            return false
+                        }
+                    }
 
-        this.form.uuid = item.uuid;
-        this.form.bjid = item.bjid;
-        this.form.mc = item.mc;
-        this.form.xf = item.xf;
-        this.form.zl = item.zl;
+                    var lrrynum = 0
+                    if(this.lrrylxList && this.lrrylxList.length>0){
+                        this.lrrylxList.forEach(function(item,index){
+                            lrrynum = lrrynum+Number(item)
+                        })
+                    }else{
+                        this.btnLimt = false;
+                        this.tipsXX("有未填项",'warning','提示');
+                        return false
+                    }
+                    this.form.lrrylx = lrrynum
 
-        this.bjidSelect = this.form.bjid.split(',');
-        this.bjidBeifen = this.bjidSelect;
-
-        let bjid = [];
-        for(let i = 0; i < this.bjidSelect.length; i++) {
-            let index = this.bjidArr.indexOf(this.bjidSelect[i])
-            if(index>=0) {
-                bjid.push(this.bjList[index])
-            }           
-        }
-        this.bjid = bjid;
-        this.formToggle = this.form.zl == this.form.xf ? true : false;
-        this.createFormVisible = true;
-    },
-    //删除
-    handleDelete(item) {
-       this.$confirm('此操作将永久删除, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-        }).then(() => {
-            delRw({
-                id: item.uuid,
-            }).then(() => {
-                this.$notify({
-                    title: '成功',
-                    message: '删除成功',
-                    type: 'success',
-                    duration: 2000
-                });
-                this.getList()
-            }).catch((error)=>{
-                this.$confirm('该任务已录入了成绩，请联系管理员进行删除操作。', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                })
+                    //表单提交
+                    switch(this.dialogStatus) {
+                        //更新
+                        case 'update':
+                            updateRw(this.form).then(() => {
+                                this.createFormVisible = false;
+                                this.dataInit();
+                                this.getList();
+                                this.getItemDetail();
+                                this.tipsXX("修改成功",'success','成功');
+                                this.btnLimt = false;
+                            }).catch(()=>{
+                                setTimeout(function(){
+                                    _this.btnLimt = false;
+                                },1500);
+                            })
+                            break;
+                        //创建    
+                        case 'create':
+                            createRw(this.form).then(() => {
+                                this.createFormVisible = false;
+                                this.dataInit();
+                                this.getList();
+                                this.getItemDetail();
+                                this.tipsXX("创建成功",'success','成功');
+                                this.btnLimt = false;
+                            }).catch(()=>{
+                                setTimeout(function(){
+                                    _this.btnLimt = false;
+                                },1500);
+                            })
+                            break;    
+                    }
+                } else {
+                    return false;
+                }
             });
-        });
-    },
-    // 分页
-    handleCurrentChange(val) {
-        this.listQuery.pageIndex = val;
-        this.getList();
-    },
+        },
+        //修改
+        handleUpdate(item) {
+            getRw({id:item.uuid}).then(res => {      
+                this.btnLimt = false
+                this.dialogStatus = 'update';
+                this.form.uuid = res.uuid;
+                this.form.bjid = res.bjid;
+                this.form.mc = res.mc;
+                this.isChange = res.rwyssjCount>0?true:false;       //任务是否能被修改
+                this.$set(this.form,'xf',res.xf);
+                this.form.zl = this.zfzl = res.zl;
+                this.sfggrw = String(res.sfggrw)               //是否公共任务
+                this.bjidSelect = this.form.bjid.split(',');
+                this.bjidBeifen = this.bjidSelect;
+                let bjid = [];
+                for(let i = 0; i < this.bjidSelect.length; i++) {
+                    let index = this.bjidArr.indexOf(this.bjidSelect[i])
+                    if(index>=0) {
+                        bjid.push(this.bjList[index])
+                    }           
+                }
+                this.bjid = bjid;
+                // 录入人员
+                if(res.lrrylx==1){
+                    this.lrrylxList = ['1']
+                }else if(res.lrrylx==2){               
+                    this.lrrylxList = ['2']
+                }else if(res.lrrylx==4){               
+                    this.lrrylxList = ['4']
+                }
+                if(res.lrrylx==3){               
+                    this.lrrylxList = ['1','2']
+                }else if(res.lrrylx==5){               
+                    this.lrrylxList = ['1','4']
+                }else if(res.lrrylx==6){               
+                    this.lrrylxList = ['2','4']
+                }else if(res.lrrylx==7){               
+                    this.lrrylxList = ['1','2','4']
+                }
+                this.createFormVisible = true;
+            })
+        },
+        //删除任务
+        handleDelete(item) {
+            this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                delRw({id: item.uuid}).then(() => {
+                    this.tipsXX("删除成功",'success','成功');
+                    const index = this.rwList.indexOf(item);
+                    this.rwList.splice(index, 1);
+                    this.listQuery.pageIndex=1
+                    this.listQuery.pageSize=10
+                    this.getList();                    
+                    this.getItemDetail();
+                }).catch((error)=>{
+                    this.$confirm('该任务已录入了成绩，请联系管理员进行删除操作。', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    })
+                });
+            });
+        },
 
-    //添加任务---执行班级
-    getAllBj () {
-        getBj({
-            page: 1,
-            limit: 50,
-            xxdm: this.listQuery.xxdm,
-            njdm: this.itemDetail.njdm,
-        }).then(response => { 
-            this.bjList = response.data.rows
-            let bjidArr = [];  //班级代码value数组
-            for(let i = 0; i < this.bjList.length; i++) {
-                bjidArr.push(this.bjList[i].uuid) 
+        /************录入部分*************/
+        // 搜索
+        handleFilter(){
+            this.listQuery.searchbjid = this.bjcj[this.cjIndex].bjid;            
+            this.getBjCj(this.currentRw.uuid);
+        },
+        //班级-标签页切换事件
+        tabClick(item) {
+            this.cjIndex = item.index;
+            if(this.listQuery.username){
+                this.listQuery.username = '';
+                this.getBjCj(this.currentRw.uuid);
             }
-            this.bjidArr = bjidArr
-        })
-    },
-    delBj(index) {
-        this.bjid.splice(index, 1);
-        this.bjidBeifen.splice(index, 1);
-        this.bjidSelect = this.bjidBeifen;
-    },
-    bjSubmit() {
-        this.bjDialogVisible = false
-        console.log(this.bjidSelect)
-        let bjid = [];
-        for(let i = 0; i < this.bjidSelect.length; i++) {
-            let index = this.bjidArr.indexOf(this.bjidSelect[i])
-            if(index>=0) {
-                bjid.push(this.bjList[index])
+        },
+        //任务列表项选中事件
+        selectBj(row, event, column) {
+            this.rwid = row.uuid;
+            let rwidArr = [];
+            for(let i = 0; i < this.rwList.length; i++) {
+                rwidArr.push(this.rwList[i].uuid)
+            }
+            this.dataIndex = rwidArr.indexOf(row.uuid);
+            this.cjIndex = "0"
+
+            this.listQuery.username = ''
+            
+            if(this.itemDetail.xmlx == 0) {
+                this.getBjCj(row.uuid)
+            }
+        },
+        //任务列表选中样式切换
+        tableRowClassName({row, rowIndex}) {
+            if (rowIndex == this.dataIndex) {
+                return 'selectedRow';
+            }
+            return '';
+        },
+        // 录入--积分
+        inpBlur(ev,row){
+            if(row.sz){
+                row.sz = Number(row.sz)
+                if(!Number(row.sz) && row.sz!=0){
+                    row.lrsure = 2
+                    return false
+                }
+
+                if(this.itemDetail.jflx==1){                //累积量
+                    if(row.sz!=0 && row.sz!=1){
+                        row.lrsure = 2
+                        return false
+                    }
+                }
+                // if(this.itemDetail.jflx==5){                //体育健康
+                //     if(!row.xf){
+                //         row.lrsure_xf = 2
+                //         return false
+                //     }
+                // }
+                if(row.sz<0){
+                    row.lrsure = 2
+                    this.tipsXX("分值不能小于0",'error','失败');
+                    return false
+                }
+                if((row.sz>this.currentRw.xf && this.itemDetail.jflx!=1 && this.itemDetail.jflx!=5)){
+                    row.lrsure = 2
+                    this.tipsXX("分值不能大于"+this.currentRw.xf,'error','失败');
+                    return false
+                }
+                if(row.sz<1){
+                    if(!(/^([0-9]*)+(.[0-9]{1,2})?$/.test(row.sz))){
+                        row.lrsure = 2
+                        return false                    
+                    }
+                }else{
+                    if(!(/^([1-9][0-9]*)+(.[0-9]{1,2})?$/.test(row.sz))){
+                        row.lrsure = 2
+                        return false                    
+                    }
+                }
+                var batchList = []
+                batchList.push(row)
+                this.tBatchInputValue(batchList)            
+            }else{
+                row.lrsure = 0
+            }     
+        },
+        inpClearsz(ev,row){
+            row.lrsure = 0
+        },
+        // 录入--学分
+        inpBlurxf(ev,row){
+            if(row.xf){
+                console.log("1")
+                row.xf = Number(row.xf)
+                if(!Number(row.xf) && row.xf!=0){
+                    row.lrsure_xf = 2
+                    return false
+                }
+                if( row.xf<0){
+                    row.lrsure_xf = 2
+                    this.tipsXX("学分不能小于0",'error','失败');
+                    return false
+                }
+                if(row.xf<1){
+                    if(!(/^([0-9]*)+(.[0-9]{1,2})?$/.test(row.xf))){
+                        row.lrsure_xf = 2
+                        return false                    
+                    }
+                }else{
+                    if(!(/^([1-9][0-9]*)+(.[0-9]{1,2})?$/.test(row.xf))){
+                        row.lrsure_xf = 2
+                        return false                    
+                    }
+                }
+                if(this.itemDetail.jflx==5){                //体育健康
+                    if(!row.sz){
+                        row.lrsure = 2
+                        return false
+                    }
+                }
+                var batchList = []
+                batchList.push(row)
+                BatchInputValue(batchList).then((res) => {  
+                    batchList[0].lrsure_xf=1
+                }).catch(()=>{
+                    batchList[0].lrsure_xf=2
+                })
+            }else{
+                row.lrsure_xf = 0
+            }     
+        },
+        inpClearxf(ev,row){
+            row.lrsure_xf = 0
+        },
+        // 录入--等级
+        down2next(event,raw){
+            var e = raw.next
+            var curData = raw.curData
+            var all = raw.numAll
+            var code = event.keyCode || event.which || event.charCode;   
+
+            let input
+            input = 'input'+curData+e
+            var batchList = []
+
+            if(code==49 || code==97 || code==65){               
+                raw.djz ='A'
+                batchList.push(raw)
+                this.tBatchInputValue(batchList)
+                if(e==all) return false;
+                else this.$refs[input][0].select();
+            }else if(code==50 || code==98 || code==66){
+                raw.djz ='B'
+                batchList.push(raw)
+                this.tBatchInputValue(batchList)
+                if(e==all) return false;
+                else this.$refs[input][0].select();
+            }else if(code==51 || code==99 || code==67){
+                raw.djz ='C'
+                batchList.push(raw)
+                this.tBatchInputValue(batchList)
+                if(e==all) return false;
+                else this.$refs[input][0].select();
+            }else if(code==52 || code==100 || code==68){
+                raw.djz ='D'
+                batchList.push(raw)
+                this.tBatchInputValue(batchList)
+                if(e==all) return false;
+                else this.$refs[input][0].select();
+            }else{
+                raw.djz =''
+            }
+        },
+        // 批量录入--通用
+        tBatchInputValue(data){
+            BatchInputValue(data).then((res) => {  
+                data[0].lrsure=1
+                if(res.errorCount>0){
+                    this.tipsXX(res.errorList[0],'error','失败');
+                }else{
+                    if(this.itemDetail.jflx==4){                   //录入图文
+                        this.tipsXX('录入成功','success','成功');
+                    }
+                }
+            }).catch(()=>{
+                data[0].lrsure=2
+            })
+        },
+        //加减分增减
+        changeXf(row) {
+            var batchList = []
+            batchList.push(row)
+            this.tBatchInputValue(batchList)   
+        },   
+        // 图文录入--上传前对文件的大小的判断
+        BatchbeforeUploadPicture(file) {
+            const isJPG = file.type === 'image/jpeg';
+            const isPNG = file.type === 'image/png';
+            let isLt2M = file.size / 1024 / 1024 < 1
+            if (!isJPG && !isPNG) {
+                this.tipsXX('上传模版只支持图片格式','info','提示');
+            }else if (!isLt2M) {
+                this.tipsXX('上传模板大小不能超过 1MB','info','提示');
             }
             
-        }
-        this.bjid = bjid;
-        this.bjidBeifen = this.bjidSelect
-    },
-    bjCancel() {
-        this.bjDialogVisible = false
-        this.bjidSelect = this.bjidBeifen;
-    },
-    bjReset() {
-        this.bjidSelect = [];
-    },
-    getBjCj(rwid) {
-        this.yxbc = this.currentRw.yxbc == 1 ? true : false
-        console.log('查成绩')
-        getCreditList({
-            xmid: this.listQuery.xmid,
-            xxdm: this.listQuery.xxdm,
-            rwid: rwid,
-        }).then(response => {
-            this.bjcj = response
-            for(let i = 0; i < response.length; i++) {
-                for(let j = 0; j < response[i].data.length-1; j++) {
-                    response[i].data[j].next = j+1;
+            return (isJPG || isPNG) && isLt2M
+        },  
+        // 图文录入--上传成功后的回调
+        uploadSuccessPic(res, file,fileList,twinfo) {
+            if(res.status=="200"){
+                this.twlrCurList= fileList
+                var allImgL = []
+                if(fileList&&fileList.length>0){
+                    fileList.forEach(function(item,ind){
+                        if(item.response){
+                            allImgL.push(item.response.value[0])
+                        }else{
+                            allImgL.push(item.url)
+                        }
+                    })
                 }
+                this.$set(twinfo,'tpdz',allImgL.join("|"))
+                this.$set(twinfo,'twlrCurNum',fileList.length)
+            }else{
+                this.tipsXX(response.resultMessage,'error','失败');
             }
-        })
-    },
-    
-    //任务列表项选中事件
-    selectBj(row, event, column) {
-        console.log('点击表单',row);
-        this.rwid = row.uuid;
-        let rwidArr = [];
-        for(let i = 0; i < this.rwList.length; i++) {
-            rwidArr.push(this.rwList[i].uuid)
-        }
-        this.dataIndex = rwidArr.indexOf(row.uuid);
-        this.cjIndex = "0"
-        console.log(this.dataIndex)
-        
-        if(this.itemDetail.xmlx == 0) {
-            this.showTable = false
-            this.getBjCj(row.uuid)
-        }else {
-            this.queryResult()
-        }
-    },
-
-    //任务列表选中样式切换
-    tableRowClassName({row, rowIndex}) {
-        if (rowIndex == this.dataIndex) {
-          return 'selectedRow';
-        }
-        return '';
-    },
-
-    //操作提示收缩
-    collapseNotice() {
-        let widthRange = [0, '697px']
-        this.$refs['noticeMsg'].style.width = widthRange[this.noticeWidth % 2]
-        this.noticeWidth++;     
-    },
-
-    //累积量-头像点击
-    ljlClick(student) {
-        if(this.currentRw.zt == 0 || this.currentRw.yxbc == 1) {
-            this.currentStu = student;
-            inputCredit(this.currentStu).then(() => {
-                let sz = this.currentStu.sz == 0 ? 1 : 0;
-                this.currentStu.sz = sz;
-            })
-        }    
-    },
-
-    //改变学分
-    changeXf(student) {
-        this.btnloading = true
-        console.log('儿子')
-        let _this = this;
-        setTimeout(function(){
-            console.log(student)
-            // _this.currentStu.xf = value
-            inputCredit(student).then(() => {
-                setTimeout(function(){
-                    _this.btnloading = false;
-                },1000);
-            }).catch(()=>{
-                setTimeout(function(){
-                    _this.btnloading = false;
-                },1000);
-            })
-        },50)  
-    },
-    
-    // 成绩录入表单初始化
-    cjInit() {
-        this.$refs['addCjform'].resetFields();
-        this.addCjVisible = false;
-        this.cjform = {};
-        this.currentStu = {};
-        this.continueAdd = false;
-        this.kszt = '0';
-    },
-    //录入
-    addCj (student) {
-        this.cjBtnLimit = false;
-        this.currentStu = student;
-        this.cjform.sz = student.sz;
-        this.addCjVisible = true;
-        this.bjDialogStatus = 'create';
-        
-    },
-    //录入取消
-    addCjCancel() {
-        this.cjInit();
-    },
-    // 录入编辑
-    updateCj(student) {
-        this.cjBtnLimit = false;
-        this.currentStu = student;
-        this.kszt = String(student.kszt);
-        this.cjform.sz = student.sz;
-        this.bjDialogStatus = 'update'
-        this.addCjVisible = true;
-    },
-    // 录入提交
-    submitCj(formName) {
-        let _this = this
-        this.$refs[formName].validate(valid => {
-            if (valid) {
-                this.cjBtnLimit = true
-                //数据处理
-                this.currentStu.kszt = this.kszt;
-                if(this.kszt == '2') {
-                    this.cjform.sz = 0
-                }
-                this.currentStu.sz = this.cjform.sz;
-                inputCredit(this.currentStu).then(() => {
-                    if(this.bjDialogStatus == 'create') {
-                        this.bjcj[this.cjIndex].noEntryCount -= 1 ;
+        },
+        // 图文录入--上传删除的回调
+        handlePictureRemove(file,fileList,twinfo){
+            var allImgL = []
+            if(fileList&&fileList.length>0){
+                fileList.forEach(function(item,ind){
+                    if(item.response){
+                        allImgL.push(item.response.value[0])
+                    }else{
+                        allImgL.push(item.url)
                     }
-                    this.currentStu.isEnter = true;
-                    this.$notify({
-                        title: '成功',
-                        message: '录入成功',
-                        type: 'success',
-                        duration: 2000
-                    });
-
-                    if(this.continueAdd && this.currentStu.next) {    
-                        this.currentStu = this.bjcj[this.cjIndex].data[this.currentStu.next]  
-                        this.cjform.sz = this.currentStu.sz;       
-                        this.bjDialogStatus = this.currentStu.isEnter ? 'update' : 'create';
-                        this.kszt = String(this.currentStu.kszt); 
-                        setTimeout(function(){
-                            _this.cjBtnLimit = false;
-                        },1500);
-
-                    }else {
-                        this.cjInit();
-                    }   
-                }).catch(()=>{
-                    setTimeout(function(){
-                        _this.cjBtnLimit = false;
-                    },1500);
                 })
-            } else {
-                return false;
             }
-        });
-    },
-    //允许补充
-    yxbcFun(val) {
-        dealAllowSupplement({
-            id: this.rwid,
-            isAllow: val ? 1 : 0    
-        }).then(()=>{
-            this.currentRw.yxbc = val ? 1 : 0
-        }).catch((error) => {
-            this.yxbc = !val;
-            this.currentRw.yxbc = val ? 0 : 1
-        })
-    },
-    //标签页切换事件
-    tabClick(item) {        
-        console.log(item.index)
-        this.cjIndex = item.index;
-        if(this.showTable && this.itemDetail.xmlx == 0) {
-            this.resultQuery = {};// 查询条件清空
-            this.queryResult();
-        }  
-    },
-    //查看结果
-    watchResult() {
-        this.resultQuery = {};// 查询条件清空
-        if(this.showTable == false) {
-            this.showTable = true;
-            this.queryResult(); 
-        }
-        // this.resultData = this.bjcj;
-    },
-    queryResult() {
-        console.log(this.dataIndex)
-        if(this.itemDetail.xmlx == 0 ) {
-            checkResult({
-                xxdm: this.listQuery.xxdm,
-                xmid: this.listQuery.xmid,
-                rwid: this.rwid,
-                bjid: this.bjcj[this.cjIndex].bjid,
-                username: this.resultQuery.username,
-                sort: this.resultQuery.sort,
-                kszt: this.resultQuery.kszt,
-            }).then(response => {
-                this.resultData = response
-            })
-        }else {
-            CheckXtResult({
-                xxdm: this.listQuery.xxdm,
-                xmid: this.listQuery.xmid,
-                rwid: this.rwid,
-            }).then(response => {
-                this.resultData = response        
-            })
-        }
-        
-    },
-    //成绩上报（逻辑）
-    reportCj() {
-        let type = 0; // 字段--用于判断调用接口
-        if(this.itemDetail.jflx == 0 && this.itemDetail.fjxmid) {
-            type = 2;
-        }else if(this.itemDetail.jflx == 0 || this.itemDetail.jflx == 2) {
-            type = 0;
-        }else if(this.itemDetail.jflx == 1) {
-            type = 1;
-        }
+            this.$set(twinfo,'tpdz',allImgL.join("|"))
+            this.$set(twinfo,'twlrCurNum',fileList.length)
+        },
+        // 图文录入--上传个数的限制
+        handleExceed(files, fileList) {
+            this.$message.warning(`当前限制选择 3 个文件`);
+        },
+        // 图文录入--上传图片的放大
+        handlePictureCardPreview(file){ 
+            this.dialogImageUrl = file.url;
+            this.dialogPictureVisible = true;
+        },
+        //图文保存
+        twSure(student){
+            var isGserr = false
+            if(student.twInfo&&student.twInfo.length>0){
+                student.twInfo.forEach(function(item,ind){
+                    if(item.fz){
+                        if(item.fz<0 || item.fz>500){
+                            isGserr = true
+                        }
+                        if(item.fz<1){
+                            if(!(/^([0-9]*)+(.[0-9]{1,2})?$/.test(item.fz))){        
+                                isGserr = true
+                            }
+                        }else{
+                            if(!(/^([1-9][0-9]*)+(.[0-9]{1,2})?$/.test(item.fz))){        
+                                isGserr = true
+                            }
+                        }
+                    }
+                })
+            }
+            if(isGserr){
+                this.tipsXX('分值不能大于500或小于0,且只能有两位小数','error','失败');
+                return false
+            } 
 
-        let notReportNum = 0; //未录入的人员总数
-        for(let i = 0; i < this.bjcj.length; i++) {
-            notReportNum += this.bjcj[i].noEntryCount;
-        }
-
-        if(type == 2) {
+            var submdata = []
+            submdata.push(student)
+            this.tBatchInputValue(submdata)
+        },
+        //图文添加
+        twAdd(item){
+            item.twInfo.push({twnr:'',tpdz:'',tpdzList:[]})
+        },
+        //图文删除
+        twDel(item,index,index2,indtw){
+            if(item.twInfo[indtw].twuuid){            
+                var delData = {
+                    xxdm:item.xxdm,
+                    xmcjid: item.twInfo[indtw].xmcjid,
+                    xh:item.xh,
+                    twid: item.twInfo[indtw].twuuid
+                }
+                DeleteCreditValue(delData).then(() => {                  
+                    item.twInfo.splice(indtw, 1);
+                    this.tipsXX('删除成功','success','成功');
+                }).catch(()=>{})
+            }else{
+                item.twInfo.splice(indtw, 1);
+            }
+        },
+        //成绩上报（逻辑）
+        reportCj() {
+            let notReportNum = 0; //未录入的人员总数
             GetXmStatistics({
                 xxdm: this.listQuery.xxdm,
                 xmid: this.listQuery.xmid,
@@ -1400,139 +1229,554 @@ export default {
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        this.reportCjAction(type) 
+                        this.reportCjAction()
                     });
                     return false
+                }else{
+                    this.reportCjAction()
                 }
-            })    
-        }else if(this.itemDetail.jflx == 0 &&  notReportNum > 0) {
-            this.$confirm('还有未录入的学生，是否将未录入的学生标记为缺考', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-               this.reportCjAction(type) 
-            });
-            return false
-        }
-
-        this.reportCjAction(type)
+            })            
+        },
+        //成绩上报（动作）
+        reportCjAction() {
+            CurrencyReport({
+                xmid: this.listQuery.xmid,
+                xxdm: this.listQuery.xxdm,
+                rwid: this.rwid,                                  
+            }).then(response => {
+                this.tipsXX("上报成功",'success','成功');
+                this.getList()
+            })
+        },
         
-    },
-    //成绩上报（动作）
-    reportCjAction(type) {
-        scoreReported({
-            xmid: this.listQuery.xmid,
-            xxdm: this.listQuery.xxdm,
-            rwid: this.rwid,      
-            }, 
-            type
-        ).then(response => {
-            this.$notify({
-                title: '成功',
-                message: '上报成功',
-                type: 'success',
-                duration: 2000
-            });
-            this.getList()
-        })
-    },
-    //在线导入
-    importOnline(item) {
-        this.importCjFormVisible = true;
-    },
-    importSubmit(fileName){ 
-        console.log('导入')
-        this.$refs[fileName].submit();
-    },
-    //取消上传
-    importCancel() {
-        this.importLoading = false;
-        this.importCjFormVisible = false;
-        this.fileList = [];
-    },
-    // 上传成功后的回调
-    uploadSuccess (response, file, fileList) {
-        console.log('上传文件', response)
-        this.importLoading = false;
-        this.$notify({
-            title: '成功',
-            message: '上传成功',
-            type: 'success',
-            duration: 2000
-        });
-        this.importCjFormVisible = false;
-        this.fileList = [];
-        this.getList();
-    },
-    // 上传错误
-    uploadError (response, file, fileList) {
-        this.importLoading = false;
-        console.log('上传失败，请重试！')
-        this.$notify({
-            title: '失败',
-            message: '上传失败，请重试！',
-            type: 'warning',
-            duration: 2000
-        });
-    },
-    // 上传前对文件的大小的判断
-    beforeUpload (file) {
-        this.importLoading = true;
-        console.log(file)
-        let extension = file.name.split('.')[1] === 'xlsx'
-        let isLt2M = file.size / 1024 / 1024 < 10
-        if (!extension) {
-            this.$notify({
-                title: '提示',
-                message: '上传模版只支持xlsx格式',
-                type: 'info',
-                duration: 2000
-            });
-            this.importLoading = false;     
-        }else if (!isLt2M) {
-            this.$notify({
-                title: '提示',
-                message: '上传模板大小不能超过 10MB',
-                type: 'info',
-                duration: 2000
-            });
+        //数据导入选择
+        handleCommand(command){
+            if(command=='xm'){                  //按项目导入
+                this.DialogVisibleTips = true
+            }
+            if(command=='rw'){                  //按任务导入
+                this.importCjFormVisible = true;
+            }
+        },
+        /************数据导入*************/
+        // 上传成功后的回调
+        uploadSuccess (response, file, fileList, type) { 
+            var isfilename = [];                   //正确的文件名
+            var that = this
+            if(type =='rw'){                    //任务导入
+                isfilename.push(this.itemDetail.mc+this.currentRw.mc+'.xlsx')
+            }
+            if(type =='xm'){                    //项目导入
+                if(this.bjList && this.bjList.length>0){
+                    this.bjList.forEach(function(item,index){
+                        isfilename.push(that.itemDetail.mc+item.bj+'.xlsx')
+                    })
+                }
+            }
+            var isSure = false;             //判断上传的文件名是否正确
+            isfilename.forEach(item => {
+                if(item==file.name){
+                    isSure = true
+                }
+            })
+            if(isSure){
+                if(response.status=="200"){
+                    this.importLoading = false;
+                    this.tipsXX("上传成功",'success','成功');
+                    if(type=='rw')                           //任务导入
+                        this.importCjFormVisible = false;                  
+                    if(type=='xm')                           //项目导入
+                        this.BatchimportCjFormVisible = false;    
+                    this.fileList = [];
+                    this.getList();
+                }else{
+                    this.importLoading = false;
+                    this.fileList = [];
+                    this.tipsXX(response.resultMessage,'error','失败');
+                }
+            }else{
+                this.importLoading = false;
+                this.fileList = [];
+                this.tipsXX("上传文件名不一致",'error','失败');
+            }
+        },
+        // 上传错误
+        uploadError (response, file, fileList) {
             this.importLoading = false;
-        }
-        return extension && isLt2M
-    },
-    // 下载模版
-    importMb() {
-        exportExcel({
-            xxdm: this.listQuery.xxdm,
-            xmid: this.listQuery.xmid,
-            rwid: this.rwid,
-            bjidlist: this.currentRw.bjid,
-        }).then(response => {
-            var blob = new Blob([response], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'}); 
-            var downloadElement = document.createElement('a');
-        　　var href = window.URL.createObjectURL(blob); //创建下载的链接
-        　　downloadElement.href = href;
-        　　downloadElement.download = '模版.xlsx'; //下载后文件名
-        　　document.body.appendChild(downloadElement);
-        　　downloadElement.click(); //点击下载
-        　　document.body.removeChild(downloadElement); //下载完成移除元素
-        　　window.URL.revokeObjectURL(href); //释放掉blob对象 
-        })
-    },
- 
-    //基础信息获取(年级/学年学期/课程)
-    dqXnXqObj() {
-        dqxnxqObj({
-            xxdm: this.listQuery.xxdm,
-        }).then(response => {
-            this.xnxq = response
-        })
-    },
-
-  }
+            this.tipsXX('上传失败，请重试！','error','失败');
+        },
+        // 上传前对文件的大小的判断
+        beforeUpload (file) {
+            this.importLoading = true;
+            let extension = file.name.split('.')[1] === 'xlsx'
+            let isLt2M = file.size / 1024 / 1024 < 10
+            if (!extension) {
+                this.tipsXX('上传模版只支持xlsx格式！','info','提示');
+                this.importLoading = false;     
+            }else if (!isLt2M) {
+                this.tipsXX('上传模板大小不能超过 10MB','info','提示');
+                this.importLoading = false;
+            }
+            return extension && isLt2M
+        },
+        //在线导入
+        importSubmit(fileName){ 
+            if(!this.$refs[fileName].uploadFiles || this.$refs[fileName].uploadFiles.length<1){
+                this.tipsXX("请选择文件",'error','失败');
+                return false
+            }
+            this.$refs[fileName].submit();
+        },
+        /************按项目导入*************/
+        // 提示确定
+        TipsSure(){
+            this.BatchSelClass = '';
+            this.BatchimportCjFormVisible = true;
+            var that = this
+            setTimeout(function(){
+                that.DialogVisibleTips = false;
+            },100)
+        },
+        //取消上传
+        BatchimportCancel() {
+            this.importLoading = false;
+            this.BatchimportCjFormVisible = false;
+        },
+        // 下载模版
+        BatchimportMb(){
+            var that = this
+            var className = ''
+            if(this.BatchSelClass>0){                   
+                if(this.bjList && this.bjList.length>0){
+                    this.bjList.forEach(function(item,index){
+                        if(item.uuid==that.BatchSelClass){
+                            className = item.bj
+                        }
+                    })
+                }
+                BatchexportExcel({
+                    xxdm: this.listQuery.xxdm,
+                    xmid: this.listQuery.xmid,
+                    bjid: this.BatchSelClass,
+                }).then(response => {
+                    var blob = new Blob([response], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'}); 
+                    var downloadElement = document.createElement('a');
+                　　var href = window.URL.createObjectURL(blob); //创建下载的链接
+                　　downloadElement.href = href;
+                　　downloadElement.download = this.itemDetail.mc+className+'.xlsx'; //下载后文件名
+                　　document.body.appendChild(downloadElement);
+                　　downloadElement.click(); //点击下载
+                　　document.body.removeChild(downloadElement); //下载完成移除元素
+                　　window.URL.revokeObjectURL(href); //释放掉blob对象 
+                })
+            }else{
+                this.tipsXX("请选择执行班级",'warning','提示');
+            }
+        },
+    
+        /************按任务导入*************/
+        //取消上传
+        importCancel() {
+            this.importLoading = false;
+            this.importCjFormVisible = false;
+            this.fileList = [];
+        },        
+        // 下载模版
+        importMb() {
+            exportExcel({
+                xxdm: this.listQuery.xxdm,
+                xmid: this.listQuery.xmid,
+                rwid: this.rwid,
+                bjidlist: this.currentRw.bjid,
+            }).then(response => {
+                var blob = new Blob([response], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8'}); 
+                var downloadElement = document.createElement('a');
+            　　var href = window.URL.createObjectURL(blob); //创建下载的链接
+            　　downloadElement.href = href;
+            　　downloadElement.download = this.itemDetail.mc+this.currentRw.mc+'.xlsx'; //下载后文件名
+            　　document.body.appendChild(downloadElement);
+            　　downloadElement.click(); //点击下载
+            　　document.body.removeChild(downloadElement); //下载完成移除元素
+            　　window.URL.revokeObjectURL(href); //释放掉blob对象 
+            })
+        },          
+    }
 };
 </script>
 
 
 
+<style lang="scss">
+    // 通用样式
+    .el-radio-group label{
+        margin-bottom: 0;
+    }
+    .left {
+        float: left;
+    }
+    .right {
+        float: right;
+    }
+    .mright {
+        margin-right: 15px;
+    }
+    .selectedRow {
+        background-color: #ecf3fe !important;
+        td:nth-child(1) {
+            background: #4787f1 !important;
+        }
+    }
+    .blue {
+        color: blue;
+    }
+
+    //ui框架部分样式修改
+    .el-input-number .el-input__inner {
+        padding: 0 !important;
+    }
+    .el-input-number__decrease, .el-input-number__increase {
+        width: 30% !important;
+    }
+
+    .body {
+        background: #eceff1;
+        // 项目详情描
+        .detail {
+            background: #fff;
+            display: flex;
+            .detail-box {
+                width: 0;
+                flex-grow: 1;
+                &:nth-child(n+2) {
+                    margin-left: -1px;
+                }
+                line-height: 40px;
+                border: 1px solid #eceff1;
+                border-bottom: none; 
+                .detail-title {
+                    padding-left: 20px;
+                    font-weight: 500;  
+                    border-bottom: 1px dashed #eceff1; 
+                }
+                .detail-content {
+                    padding-left: 20px;
+                    .content-title {
+                        color: #758a9d;
+                    }
+                }
+            }
+        }
+        .detail-pull {
+            margin-bottom: 30px;
+            .detail-pullbtn {
+                background: #f7f8fa;
+                width: 100%;
+            } 
+        }
+
+        .box-table{
+            min-width: 940px;
+        }
+        // 任务列表
+        .rw-table {
+            .rw-header {
+                margin-bottom: 10px;
+                height: 40px;
+                line-height: 40px;
+            }
+            .rw-body { 
+                background: #fff;
+                .update-btn {
+                    color: #ff9703;
+                }
+                .delete-btn {
+                    color: #4cb04e;
+                }
+            }
+        }
+
+        // 成绩|结果 列表
+        .cj-table {
+            .empty-table {
+                height: 172px;
+                margin-top: 50px;
+                line-height: 172px;
+                text-align: center;
+                background: #fbfbfd;
+                font-size: 20px; 
+            }
+
+            .cj-header {
+                position: relative;
+                margin-bottom: 10px;
+                height: 40px;
+                .yxbc-style {
+                    position: absolute;
+                    right: 28px;
+                    bottom: -46px;
+                    z-index: 9;
+                }
+            }
+
+            .cj-body {
+                .table-notice {
+                    background-color: rgb(255, 236, 129);
+                    padding: 0 10px;
+                    border-radius: 10px; 
+                    .notice-icon {
+                        padding: 8px 0;
+                        border: none;
+                        font-size: 24px;
+                    }
+                    height: 40px;
+                    overflow: hidden;
+                    .notice-msg {
+                        overflow: hidden;
+                        line-height: 40px;
+                        width: 697px;
+                        transition: width 1s;
+                    }
+                }
+                .table-header {
+                    min-height: 40px;
+                    line-height: 40px;
+                    margin-bottom: 15px;
+                    .xmfilter {
+                        width: 250px;
+                    }
+                }
+                .table-body{
+                    .stu-card {
+                        &:hover .stu-btn {
+                            display: block;
+                        }
+                        &:hover {
+                            background: #dde8f7; 
+                        }
+                        cursor: pointer;
+
+                        float: left;
+                        position: relative;
+                        box-sizing: border-box; 
+                        height: 220px;
+                        width: calc((100% - 90px)/7);
+                        font-size: 16px;  
+                        text-align: center;  
+                        background: #f5f7fa; 
+                        margin-bottom: 15px;          
+                        margin-right: 15px;
+                        &:nth-child(7n) {
+                            margin-right: 0;
+                        }
+        
+                        .stu-icon {
+                            padding: 15px 5px 5px 5px;
+                            img {
+                                width: 75%;
+                                height: 75%;
+                            }
+                        }
+                        .stu-desc {
+                            line-height: 40px;
+                        }
+                        .stu-btn-block{
+                            width: 100%;
+                            position: absolute;
+                            bottom: 0;
+                            left: 0;
+                            
+                            border-radius: 0;
+                            input{
+                                text-align:center
+                            }
+                        }
+                        .stu-btn {
+                            width: 100%;
+                            position: absolute;
+                            bottom: 0;
+                            
+                            border-radius: 0;
+                            display: none;
+                            
+                        }   
+                    }
+                }
+            }
+        }
+
+        // 新建任务-班级选择项
+        .select-item {
+            margin-bottom: 10px; 
+        }
+
+        //在线导入
+        .import_box {
+            .import_body {
+                overflow: hidden;
+            }
+            .import_desc {
+                overflow: hidden;
+                margin-top: 20px;
+                padding-top: 20px;
+                border-top: 1px solid #ccc;
+                text-align: left;
+            }
+        }
+
+    }
+
+    .twIndRow{
+        min-height:80px;
+        // line-height: 80px;
+        margin-bottom: 10px;
+        .el-col-2{
+            line-height: 80px;
+        }
+        .el-col-8{
+            line-height: 80px;
+        }
+        .twIndspan{
+            line-height: 80px;
+            width:100%;
+            display:block;
+            text-align:center;
+        }
+        .el-upload--picture-card{
+            width: 80px;
+            height: 80px;
+            line-height:78px;
+            i{
+                font-size:18px;
+            }
+            &.imgupshow{
+                float: left;
+                margin: 0 8px 8px 0;
+                img{
+                    display: block;
+                    width:100%;
+                    height:100%;
+                }
+            }
+        }
+
+
+        .el-upload-list--picture-card{
+            .el-upload-list__item{
+                width: 80px;
+                height: 80px;
+            }
+        } 
+        .el-dialog__headerbtn{
+            line-height:1;
+        }
+        .el-dialog__wrapper{
+            z-index: 2555!important;
+        }
+        button{ 
+            margin: 0 auto;
+            display: block;
+        }
+
+        .twimg{
+
+        }
+        .twimgList{
+            width: 80px;
+            height: 80px;
+            line-height: 78px;
+            display: inline-block;
+            text-align: center;
+            cursor: pointer;
+            outline: 0;
+            vertical-align: top;
+            background-color: #fbfdff;
+            border: 1px dashed #c0ccda;
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin: 0 8px 8px 0;
+            float:left;
+            img{
+                display: block;
+                width: 100%;
+                height:100%;
+            }
+        }
+        .addimg{
+            width: 80px;
+            height: 80px;
+            line-height: 78px;
+            display: inline-block;
+            float:left;
+            text-align: center;
+            cursor: pointer;
+            outline: 0;
+            vertical-align: top;
+            background-color: #fbfdff;
+            border: 1px dashed #c0ccda;
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin: 0 8px 8px 0;
+            position: relative;
+            cursor: pointer;
+            input{
+                line-height: normal;
+                width:100%;
+                height:100%;
+                opacity:0;
+                position: absolute;
+                left:0; top:0;
+            }
+            i{
+                font-size: 18px;
+                color: #8c939d;
+            }
+        }
+        div{
+            &.on{
+                .el-upload--picture-card{
+                    display:none;
+                }
+            }
+        }
+    }
+
+    .v-modal{
+        z-index:500!important;
+    }
+    
+    .red{
+        color:#F56C6C;font-size: 14px;
+    }
+
+</style>
+<style lang="scss">
+    .inpBSign{
+        .el-input{
+            width: 150px;
+            margin-right: 10px;
+        }
+        .singico{
+            font-size: 18px;
+        }
+        .el-icon-close{
+            color:#F56C6C;
+        }
+        .el-icon-check{
+            color: #67C23A;
+        }
+    }
+    .select-item .el-checkbox{
+        margin-right:10px;
+    }
+    .select-item .el-checkbox.is-bordered+.el-checkbox.is-bordered{
+        margin-left:0
+    }
+    
+    .twIndRowheader{
+        .el-col{
+            line-height: 40px;
+            display:block;
+            text-align:center;
+        }
+    }
+</style>

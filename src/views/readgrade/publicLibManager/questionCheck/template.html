@@ -1,0 +1,97 @@
+<div class="app-container calendar-list-container">
+  <el-row>
+    <el-button type="primary" @click="checkoutAdd">确认加入</el-button><span style="color: #ccc">&emsp;请选择要导入的公共库书目</span>
+  </el-row>
+
+  <el-row class="form-item">
+    <el-form :model="outQForm" ref="outQForm" label-width="100px" class="demo-ruleForm">
+      <el-col class="inline-item">
+        <el-form-item label="所属年级" prop="Class">
+          <el-select @change="queryQIdOut" v-model="outQForm.Class" placeholder="请选择年级">
+            <el-option v-for="item in classOptions" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col class="inline-item">
+        <el-form-item label="所属学期" prop="Grade">
+          <el-select @change="queryQIdOut" v-model="outQForm.Grade" placeholder="请选择学期">
+            <el-option label="上学期" :value="1"></el-option>
+            <el-option label="下学期" :value="2"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+      <el-col class="inline-item">
+        <el-form-item label="书目" prop="BookId">
+          <el-select v-model="outQForm.BookId" placeholder="请选择相关书目">
+            <el-option v-for="(item, index) in QOutList" :label="item.BookName" :value="item.BookId" :key="index"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-col>
+    </el-form>
+  </el-row>
+
+
+  <el-row class="check-all">
+    <el-checkbox v-model="checkedAllQ" @change="selectAllQ">全选</el-checkbox>
+  </el-row>
+  <el-card class="card-item" shadow="hover" v-for="(item, index) in QList" style="line-height: 2em;" :key="index">
+    <el-row>
+      <el-row>
+        <el-checkbox v-model="item.state">{{item.qname}}</el-checkbox>
+        &nbsp;{{item.Title}}{{item.CloneTextBookId}}
+      </el-row>
+      <el-row v-if="item.Type == 1">
+        <p v-for="(ele, idx) in item.qArr" :key="idx">
+          <el-radio disabled v-model="item.Answer" :label="++idx + ''"><span style="color: #303133;">{{ele}}</span></el-radio>
+        </p>
+      </el-row>
+
+      <el-row v-if="item.Type == 2">
+        <span style="color: #303133;">{{item.qArr[0]}}</span>
+      </el-row>
+
+      <el-row v-if="item.Type == 3">
+        <p>
+          <el-radio disabled v-model="item.Answer" label="1"><span style="color: #303133;">{{item.qArr[0]}}</span></el-radio>
+        </p>
+        <p>
+          <el-radio disabled v-model="item.Answer" label="2"><span style="color: #303133;">{{item.qArr[1]}}</span></el-radio>
+        </p>
+      </el-row>
+
+      <el-row v-if="item.Type == 4">
+        <el-checkbox-group v-model="item.ansArr">
+          <p v-for="(obj, objidx) in item.qArr" :key="objidx">
+            <el-checkbox :label="obj" disabled><span style="color: #303133;">{{obj}}</span></el-checkbox>
+          </p>
+        </el-checkbox-group>
+      </el-row>
+    </el-row>
+    <hr>
+
+    <p>参考答案：{{item.Answer.split('|').join(',')}}</p>
+    <p>难易度： {{item.diff}}</p>
+    <p>书本名：{{BList.BookName}}</p>
+    <div>
+      <span>年级：{{BList.Class}}</span>&emsp;
+      <span>学期：{{BList.Grade}}</span>
+    </div>
+  </el-card>
+
+
+
+  <el-dialog title="提示" :visible.sync="commitDialog" width="30%" center>
+    <span>{{'确认加入' + len + '道题目？'}}</span>
+    <span slot="footer" class="dialog-footer">
+      <el-button type="primary" plain @click="commitDialog = false">取 消</el-button>
+      <el-button type="primary" @click="handleCommit">确 定</el-button>
+    </span>
+  </el-dialog>
+
+
+  <!-- 分页组件 -->
+  <!-- <el-row>
+    <PageBar :currentpage="CurrentPage" @handlePageSize="handleCurrentPageSize" @handlePage="handleCurrentPage" :total="TotalPage"></PageBar>
+  </el-row> -->
+</div>

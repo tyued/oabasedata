@@ -1,0 +1,50 @@
+.app-container {
+  .row-input {
+    margin-top: 10px;
+  }
+  .card-item {
+    margin-bottom: 10px;
+  }
+  .check-all {
+    padding: 10px;
+    // padding-left: 10px;
+  }
+  .download {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  p {
+    margin-top: 10px;
+  }
+  .icons {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    i {
+      line-height: 40px;
+      font-size: 30px;
+      color: #b4bccc;
+    }
+  }
+  .span-text {
+    font-size: 14px;
+    line-height: 40px;
+  }
+  .form-item {
+    margin-top: 20px;
+  }
+  .row-padding {
+    padding-bottom: 16px;
+  }
+  .inline-item {
+    width: 300px;
+  }
+  .hidden-row {
+    transition: all 0.5s;
+    overflow: hidden;
+  }
+}
+

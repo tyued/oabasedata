@@ -16,11 +16,43 @@ export function userpage(query) {
   });
 }
 
+export function getXxadminPage(query) {
+  return fetch({
+    url: '/api/admin/user/getXxadminPage',
+    method: 'get',
+    params: query
+  });
+}
+
 export function addObj(obj) {
   return fetch({
     url: '/api/admin/user',
     method: 'post',
     data: obj
+  });
+}
+
+export function addAdminUser(obj) {
+  return fetch({
+    url: '/api/admin/user/addAdminUser',
+    method: 'post',
+    data: obj
+  });
+}
+
+export function getGroupIdbyUser(obj) {
+  return fetch({
+    url: '/api/admin/user/getGroupIdbyUser',
+    method: 'post',
+    data: obj
+  });
+}
+
+export function checkXXadminUser(query) {
+  return fetch({
+    url: '/api/admin/user/checkXXadminUser',
+    method: 'get',
+    params: query
   });
 }
 
@@ -45,6 +77,15 @@ export function putObj(id, obj) {
     data: obj
   })
 }
+
+export function putAdminUser(obj) {
+  return fetch({
+    url: '/api/admin/user/updateAdmin',
+    method: 'put',
+    data: obj
+  })
+}
+
 // export function putObj(obj) {
 //   return fetch({
 //     url: '/api/admin/user/update',
@@ -53,3 +94,10 @@ export function putObj(id, obj) {
 //   })
 // }
 
+export function updateMM(obj) {
+  return fetch({
+    url: '/api/admin/user/updatemm',
+    method: 'put',
+    data: obj
+  })
+}

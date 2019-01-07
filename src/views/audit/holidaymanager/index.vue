@@ -49,28 +49,27 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="550px">
       <el-form :model="form" ref="form" label-width="140px">
 
-        <el-form-item label="假期名称" prop="jqmc">
-          <el-input placeholder="请输入假期名称" style="width: 190px;" v-model="form.jqmc"></el-input>
+        <el-form-item label="假期名称" prop="jqmc" :rules="[{ required: true, message: '该条件不能为空' }]">
+          <el-input placeholder="请输入假期名称" style="width: 190px;" v-model="form.jqmc" :maxlength="6"></el-input>
         </el-form-item>
 
-        <el-form-item label="最小请假单位" prop="qjdw">
+        <el-form-item label="最小请假单位" prop="qjdw" :rules="[{ required: true, message: '该条件不能为空' }]">
           <el-select placeholder="请选择请假单位" v-model="form.qjdw">
-            <el-option label="按天请假" value="1"></el-option>
-            <el-option label="按半天请假" value="2"></el-option>
-            <el-option label="按小时请假" value="3"></el-option>
+            <el-option v-for="dw in dictMap.qjdw" :label=dw.text :value=dw.id :key="dw.id"></el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="日折算时长" prop="zssc">
+        <el-form-item label="日折算时长" prop="zssc" v-if="form.qjdw==='3'" :rules="[{ required: true, message: '该条件不能为空' }]">
           <el-input-number placeholder="请输入折算时长" style="width: 140px;" :min="1" :max="24" v-model="form.zssc"></el-input-number>
           <span>小时=1天</span>
+          <p style="font-size: 12px;color: gray;margin-bottom: 0;">请假，出差，外出，加班的日折算时长同时生效</p>
         </el-form-item>
 
-        <el-form-item label="计算请假时长方式">
+        <el-form-item label="计算请假时长方式" prop="scfs" v-if="form.qjdw==='3'" :rules="[{ required: true, message: '该条件不能为空' }]">
           <el-select placeholder="请选择计算方式" v-model="form.scfs">
-            <el-option label="按自然日计算请假时长" value="1"></el-option>
-            <el-option label="按工作日计算请假时长" value="2"></el-option>
+            <el-option v-for="fs in dictMap.scfs" :label=fs.text  :value=fs.id :key="fs.id"></el-option>
           </el-select>
+
         </el-form-item>
 
       </el-form>
@@ -85,7 +84,6 @@
 </template>
 <script>
   import { page, get, del, post, put } from 'api/audit/holidaymanager/index'
-  import { getXXMess } from 'api/dict'
 
   export default {
     name: 'holidayManager',
@@ -97,8 +95,10 @@
         listLoading: false,
         total: 0,
         list: [],
-        dictMap: {},
-        form: {},
+        dictMap: { qjdw: [{ id: '1', text: '按天请假' }, { id: '3', text: '按小时请假' }],
+        // dictMap: { qjdw: [{ id: '1', text: '按天请假' }, { id: '2', text: '按半天请假' }, { id: '3', text: '按小时请假' }],
+          scfs: [{ id: '1', text: '按自然日计算请假时长' }, { id: '2', text: '按工作日计算请假时长' }] },
+        form: { jqmc:'', qjdw:'', zssc:1 },
         listQuery: {              // 分页
           page: 1,
           limit: 20,
@@ -111,26 +111,25 @@
         dialogFormVisible: false,
         dialogStatus: '',
         // tabPosition: 'left',
-        changeSure: false                       // 防止重复提交
+        changeSure: false // 防止重复提交
       }
     },
     created() {
       this.xxdm = window.localStorage.getItem('xxdm');
       this.listQuery.xxdm = this.xxdm;
       this.getList();
-      this.getDictMap();
+    },
+    watch: {
+      dialogFormVisible(val) {
+        if (val === false) {
+          this.$refs.form.resetFields();
+          this.form.jqmc = '';
+          this.form.qjdw = '';
+          this.form.zssc = 1;
+        }
+      }
     },
     methods: {
-      // show() {
-      //   this.showFlag = !this.showFlag;
-      // },
-
-      getDictMap() {
-        getXXMess(this.xxdm).then(response => {
-          this.dictMap.qjdw = response.data.qjdw;
-          this.dictMap.scfs = response.data.scfs;
-        })
-      },
 
       getList() {
         this.listLoading = true;
@@ -150,7 +149,7 @@
         this.getList();
       },
       handleCreate() {
-        this.form = {};
+        this.num = 1;
         this.changeSure = false;
         this.dialogStatus = 'create';
         this.dialogFormVisible = true;
@@ -184,21 +183,29 @@
       cancel() {
         this.dialogFormVisible = false;
       },
-
       create(formName) {
         this.$refs[formName].validate(valid => {
           if (valid) {
             this.changeSure = true;
             this.form.xxdm = this.xxdm;
-            post(this.form).then(res => {
-              if (res.status == 200) {
+            if (typeof this.form.scfs === 'undefined') {
+              this.form.scfs = '2';
+            }
+            post({
+              jqmc: this.form.jqmc,
+              qjdw: this.form.qjdw,
+              scfs: this.form.scfs,
+              xxdm: this.form.xxdm,
+              zssc: this.form.zssc
+            }).then(res => {
+              if (res.status === 200) {
                 this.dialogFormVisible = false;
                 this.getList();
                 this.$notify({ title: '成功', message: '创建成功', type: 'success', duration: 2000 });
               } else {
                 this.$notify({ title: '失败', message: res.message, type: 'error', duration: 2000 });
               }
-            })
+            });
             const that = this;
             setTimeout(() => {
               that.changeSure = false;
@@ -218,7 +225,7 @@
             this.form.password = undefined;
             put(this.form.jqid, this.form).then(res => {
               this.getList();
-              if (res.status == 200) {
+              if (res.status === 200) {
                 this.dialogFormVisible = false;
                 this.$notify({ title: '成功', message: '修改成功', type: 'success', duration: 2000 });
               } else {

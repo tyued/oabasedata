@@ -3,7 +3,6 @@
     <div class="filter-container">
       <el-input placeholder="请输入内容" @keyup.enter.native="handleFilter" v-model="listQuery[searchsel]" class="input-with-select"  style="width: 400px;" >
           <el-select v-model="searchsel" slot="prepend" placeholder="请选择" @change="searchChange" style="width:120px; height:38px; margin:0 auto;">
-              <el-option label="全部" value="all"></el-option>
               <el-option label="校区名称" value="xqmc"></el-option>
           </el-select>
       </el-input>
@@ -35,10 +34,10 @@
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="30%">
       <el-form :model="form" ref="form" :rules="rules" label-width="100px">
         <el-form-item label="校区名称" prop="xqmc">
-          <el-input v-model="form.xqmc" placeholder="请输入校区名称" ></el-input>
+          <el-input  :maxlength="20" v-model="form.xqmc" placeholder="请输入校区名称" ></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="bz">
-          <el-input type="textarea" v-model="form.bz" placeholder="不超过50个字"></el-input>
+          <el-input maxlength="25" type="textarea" v-model="form.bz" placeholder="请输入备注"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -65,23 +64,23 @@ export default {
   },
   data() {
     return {
-      xxdm:'',
-      campus:[],
-      tableKey:0,
+      xxdm: '',
+      campus: [],
+      tableKey: 0,
       listLoading: true,
       list: null,
       total: null,
-      listQuery: {              //分页
+      listQuery: {              // 分页
         page: 1,
         limit: 20,
         name: undefined
       },
-      form:{
-        "xqmc": undefined,
-        "bz": undefined,
+      form: {
+        xqmc: undefined,
+        bz: undefined
       },
-      searchsel:'all',                           //查询条件                    //判断点击弹层是creat（添加）还是update（编辑）
-      rules:{
+      searchsel: 'xqmc',                           // 查询条件                    //判断点击弹层是creat（添加）还是update（编辑）
+      rules: {
         xqmc: [{
           required: true,
           message: '请输入校区名称',
@@ -96,21 +95,22 @@ export default {
           max: 50,
           message: '限50个字符',
           trigger: 'blur'
-        }],
+        }]
       },
-      textMap:{
+      textMap: {
         update: '编辑',
         create: '创建'
       },
       dialogFormVisible: false,
       dialogStatus: '',
-      tabPosition:'left',
-
-      changeSure:false,                       //防止重复提交
+      tabPosition: 'left',
+      disabled: true,
+      changeSure: false
+      // 防止重复提交
     }
   },
   created() {
-    this.xxdm = window.localStorage.getItem("xxdm");
+    this.xxdm = window.localStorage.getItem('xxdm');
     this.listQuery.xxdm = this.xxdm;
     this.getList();
   },
@@ -129,18 +129,18 @@ export default {
     },
   // 搜索
     handleFilter() {
-      if(this.searchsel=="all"){
-          this.listQuery = { page: 1, limit: 20, name: undefined }
+      if (this.searchsel == 'all') {
+        this.listQuery = { page: 1, limit: 20, name: undefined }
       }
       this.getList();
     },
-    searchChange(val){
-        this.listQuery = {
-            page: 1,
-            limit: 20,
-            xxdm: this.xxdm,
-            name: undefined
-        }
+    searchChange(val) {
+      this.listQuery = {
+        page: 1,
+        limit: 20,
+        xxdm: this.xxdm,
+        name: undefined
+      }
     },
   // 添加按钮
     handleCreate() {
@@ -150,8 +150,8 @@ export default {
     },
     resetTemp() {
       this.form = {
-        "xqmc": undefined,
-        "bz": undefined,
+        xqmc: undefined,
+        bz: undefined
       };
       this.changeSure = false;
     },
@@ -167,9 +167,9 @@ export default {
     handleUpdate(row) {
       this.changeSure = false;
       getObj(row.uuid).then(response => {
-          this.form = response.data;
-          this.dialogFormVisible = true;
-          this.dialogStatus = 'update';
+        this.form = response.data;
+        this.dialogFormVisible = true;
+        this.dialogStatus = 'update';
       });
     },
     handleDelete(row) {
@@ -178,16 +178,16 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-          delObj(row.uuid).then(() => {
-              this.$notify({
-                title: '成功',
-                message: '删除成功',
-                type: 'success',
-                duration: 2000
-              });
-              const index = this.list.indexOf(row);
-              this.list.splice(index, 1);
+        delObj(row.uuid).then(() => {
+          this.$notify({
+            title: '成功',
+            message: '删除成功',
+            type: 'success',
+            duration: 2000
           });
+          const index = this.list.indexOf(row);
+          this.list.splice(index, 1);
+        });
       });
     },
   // 弹层
@@ -202,21 +202,21 @@ export default {
         if (valid) {
           this.changeSure = true;
           this.form.xxdm = this.xxdm;
-          addObj(this.form).then((res) => {
-            if(res.status=="200"){
-                this.dialogFormVisible = false;
-                this.getList();
-                this.$notify({title: '成功', message: '创建成功', type: 'success', duration: 2000});
-            }else{
-                this.$notify({title: '失败', message: res.message, type: 'error', duration: 2000});
+          addObj(this.form).then(res => {
+            if (res.status == '200') {
+              this.dialogFormVisible = false;
+              this.getList();
+              this.$notify({ title: '成功', message: '创建成功', type: 'success', duration: 2000 });
+            } else {
+              this.$notify({ title: '失败', message: res.message, type: 'error', duration: 2000 });
             }
           })
-          var that = this;
-          setTimeout(function(){
-              that.changeSure = false;
-          },1500);
+          const that = this;
+          setTimeout(() => {
+            that.changeSure = false;
+          }, 1500);
         } else {
-          this.$notify({title: '失败', message: '还有未填项', type: 'error', duration: 2000});
+          this.$notify({ title: '失败', message: '还有未填项', type: 'error', duration: 2000 });
           return false;
         }
       });
@@ -228,26 +228,26 @@ export default {
           this.changeSure = true;
           this.dialogFormVisible = false;
           this.form.password = undefined;
-          putObj(this.form.uuid, this.form).then((res) => {
-              this.dialogFormVisible = false;
-              this.getList();
-              if(res.status=="200"){
-                this.$notify({title: '成功', message: '创建成功', type: 'success', duration: 2000});
-            }else{
-                this.$notify({title: '失败', message: res.message, type: 'error', duration: 2000});
+          putObj(this.form.uuid, this.form).then(res => {
+            this.dialogFormVisible = false;
+            this.getList();
+            if (res.status == '200') {
+              this.$notify({ title: '成功', message: '创建成功', type: 'success', duration: 2000 });
+            } else {
+              this.$notify({ title: '失败', message: res.message, type: 'error', duration: 2000 });
             }
           });
 
-          var that = this;
-          setTimeout(function(){
-              that.changeSure = false;
-          },1500);
+          const that = this;
+          setTimeout(() => {
+            that.changeSure = false;
+          }, 1500);
         } else {
-          this.$notify({title: '失败', message: '还有未填项', type: 'error', duration: 2000});
+          this.$notify({ title: '失败', message: '还有未填项', type: 'error', duration: 2000 });
           return false;
         }
       });
-    },
+    }
 
   }
 }

@@ -101,3 +101,8 @@ export function html2Text(val) {
 export function toThousandslsFilter(num) {
   return (+num || 0).toString().replace(/^-?\d+/g, m => m.replace(/(?=(?!\b)(\d{3})+$)/g, ','));
 }
+
+export function weekdayFormat(key) {
+  const weekdays = ['', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
+  return weekdays[key];
+}

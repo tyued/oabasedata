@@ -16,6 +16,15 @@ export function page(query) {
   });
 }
 
+// 模糊查询
+export function fuzzyQuery(query) {
+  return fetch({
+    url: '/api/base/jcCdsj/fuzzyQuery',
+    method: 'get',
+    params: query
+  });
+}
+
 export function addObj(obj) {
   return fetch({
     url: '/api/base/jcCdsj',

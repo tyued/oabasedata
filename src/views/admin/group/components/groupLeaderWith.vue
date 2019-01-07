@@ -5,6 +5,9 @@
             <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">搜索</el-button>
         </el-header>
         <el-main>
+            <div v-if="list.length == 0">
+              <span style="font-size:2rem; color: #707070;">请先点击自选教师添加教师！</span>
+            </div>
             <el-form :model="form" ref="form" label-width="110px" style="height:300px;">
                 <el-checkbox-group v-model="members" size="small">
                     <el-checkbox v-for="item in list" :key="item.id" :label="item.id" border>{{item.name}}</el-checkbox>
@@ -32,67 +35,65 @@ import {
 } from 'api/admin/group/index';
 import { mapGetters } from 'vuex';
 export default {
-    data() {
-        return {
-            xxdm:'',
-            listQuery: {
-                page: 1,
-                limit: 20,
-                type:3,
-                name: undefined
-            },
-            list: null,
-            total: null,
+  data() {
+    return {
+      xxdm: '',
+      listQuery: {
+        page: 1,
+        limit: 20,
+        type: 3,
+        name: undefined
+      },
+      list: null,
+      total: null,
 
-            form:{},
-            members:[],
-            allremmber:[]
-        }
+      form: {},
+      members: [],
+      allremmber: []
+    }
+  },
+  props: {
+    groupId: {
+      default: '1'
     },
-    props: {
-        groupId: {
-            default: '1'
-        },
-        seltype:{                       //角色/部门
-
-        },
-        alreadyMem:{                    //已经关联的用户
-
-        },
-    },
-    computed: {
-      ...mapGetters([
-        'get_dynamicTagschange'
-      ])
-    },
-    created() {
-        this.xxdm = window.localStorage.getItem("xxdm");
-        this.allremmber = this.$store.getters.get_dynamicTagschange
-
-        this.getList();
-
-        for(var i=0;i<this.alreadyMem.length;i++){
-            this.members[i]=this.alreadyMem[i].id;
-        }
-
+    seltype: {                       // 角色/部门
 
     },
-    watch:{
-        alreadyMem(){
-            this.members = [];
-            for(var i=0;i<this.alreadyMem.length;i++){
-                this.members[i]=this.alreadyMem[i].id;
-            }
-        },
-        get_dynamicTagschange(){
-          this.allremmber = this.$store.getters.get_dynamicTagschange
-            this.getList();
-        }
+    alreadyMem: {                    // 已经关联的用户
+
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'get_dynamicTagschange'
+    ])
+  },
+  created() {
+    this.xxdm = window.localStorage.getItem('xxdm');
+    this.allremmber = this.$store.getters.get_dynamicTagschange
+
+    this.getList();
+
+    for (let i = 0; i < this.alreadyMem.length; i++) {
+      this.members[i] = this.alreadyMem[i].id;
+    }
+  },
+  watch: {
+    alreadyMem() {
+      this.members = [];
+      for (let i = 0; i < this.alreadyMem.length; i++) {
+        this.members[i] = this.alreadyMem[i].id;
+      }
     },
-    methods:{
-        getList(){
-            this.listQuery.xxdm = this.xxdm;
-            this.list = this.allremmber
+    get_dynamicTagschange() {
+      this.allremmber = this.$store.getters.get_dynamicTagschange
+      this.getList();
+    }
+  },
+  methods: {
+    getList() {
+      this.listQuery.xxdm = this.xxdm;
+      this.list = this.allremmber
             // if(this.seltype==1){
             //     userAllpage(this.listQuery).then(response => {
             //
@@ -100,41 +101,41 @@ export default {
             //         this.total = response.data.total;
             //     })
             // }
-        },
+    },
         // 搜索
-        handleFilter() {
-            this.getList();
-        },
-        handleCurrentChange(val) {
-            this.listQuery.page = val;
-            this.getList();
-        },
+    handleFilter() {
+      this.getList();
+    },
+    handleCurrentChange(val) {
+      this.listQuery.page = val;
+      this.getList();
+    },
         // 取消按钮
-        cancel(formName) {
-            this.$emit('closeUserWithLeaderDialog');
-            this.$refs[formName].resetFields();
-        },
+    cancel(formName) {
+      this.$emit('closeUserWithLeaderDialog');
+      this.$refs[formName].resetFields();
+    },
         // 确定按钮
-        create(formName) {
-            this.$refs[formName].validate(valid => {
-                if (valid) {
-                    this.form.xxdm = this.xxdm;
-                    if (this.members.length > 0) this.form.leaders = this.members.join();
-                    modifyLeaders(this.groupId,this.form).then(() => {
-                        this.$emit('closeUserWithLeaderDialog');
-                        this.$notify({
-                            title: '成功',
-                            message: '创建成功',
-                            type: 'success',
-                            duration: 2000
-                        });
-                    })
-                } else {
-                    return false;
-                }
+    create(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.form.xxdm = this.xxdm;
+          if (this.members.length > 0) this.form.leaders = this.members.join();
+          modifyLeaders(this.groupId, this.form).then(() => {
+            this.$emit('closeUserWithLeaderDialog');
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
+              type: 'success',
+              duration: 2000
             });
-        },
+          })
+        } else {
+          return false;
+        }
+      });
     }
+  }
 }
 </script>
 <style scoped>

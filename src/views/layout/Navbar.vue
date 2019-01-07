@@ -7,25 +7,19 @@
   <tabs-view></tabs-view>
   <error-log v-if="log.length>0" class="errLog-container" :logsList="log"></error-log>
   
-  <el-dropdown class="avatar-container" trigger="click">
-    <!-- <div class="avatar-wrapper"> <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'"> <i class="el-icon-caret-bottom"></i> </div> -->
-    
+  <!--<el-dropdown class="avatar-container" trigger="click">
     <div class="avatar-wrapper"> 
       <screenfull class='screenfull'></screenfull>
       <span class="Topusername">{{username}}</span>
       <i class="el-icon-caret-bottom"></i> 
     </div>
     <el-dropdown-menu class="user-dropdown" slot="dropdown">
-      <!-- <router-link class='inlineBlock' to="/">
+      <router-link class='inlineBlock' to="/">
         <el-dropdown-item> 首页 </el-dropdown-item>
-      </router-link> -->
-      <router-link class='inlineBlock' to="/projectManager/mainProject">
-        <el-dropdown-item> 学分制评价管理 </el-dropdown-item>
-      </router-link>
-      
+      </router-link>      
       <el-dropdown-item divided><span @click="logout" style="display:block;">退出登录</span></el-dropdown-item>
     </el-dropdown-menu>
-  </el-dropdown>
+  </el-dropdown>-->
 </el-menu>
 </template>
 
@@ -61,14 +55,14 @@ export default {
   },
   mounted() {
     this.username = this.$store.getters.name
-    // console.log()
   },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch('ToggleSideBar')
+      this.$store.dispatch('ToggleSideBar',{"opened":this.sidebar.opened})
     },
     logout() {
       this.$store.dispatch('LogOut').then(() => {
+        // this.$store.dispatch('SetCurMenuId','dashboard')
         location.reload(); // 为了重新实例化vue-router对象 避免bug
       });
     }
@@ -82,6 +76,7 @@ export default {
     height: 50px;
     line-height: 50px;
     border-radius: 0 !important;
+    overflow:hidden;
     .hamburger-container {
         line-height: 58px;
         height: 50px;

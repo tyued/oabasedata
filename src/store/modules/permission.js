@@ -28,10 +28,17 @@ function hasPermission(menus, route) {
 function filterAsyncRouter(asyncRouterMap, menus, menuDatas) {
   const accessedRouters = asyncRouterMap.filter(route => {
     if (hasPermission(menus, route)) {
-      route.name = menuDatas[route.authority].title;
-      route.icon = menuDatas[route.authority].icon;
-      if (route.children && route.children.length) {
-        route.children = filterAsyncRouter(route.children, menus, menuDatas);
+      try {
+        if (route.authority == route.path) {
+          route.name = menuDatas[route.authority].title;
+          route.icon = menuDatas[route.authority].icon;
+        }
+        // route.name = menuDatas[route.authority].title;
+        // route.icon = menuDatas[route.authority].icon;
+        if (route.children && route.children.length) {
+          route.children = filterAsyncRouter(route.children, menus, menuDatas);
+        }
+      } catch (err) {
       }
       return true
     }

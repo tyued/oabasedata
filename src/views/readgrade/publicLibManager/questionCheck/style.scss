@@ -1,0 +1,22 @@
+.app-container {
+  .row-input {
+    margin-top: 10px;
+  }
+  .inline-item {
+    width: 300px;
+  }
+  .form-item {
+    margin-top: 20px;
+  }
+  .check-all {
+    padding-bottom: 12px;
+    padding-left: 10px;
+  }
+  .card-item {
+    margin-bottom: 10px;
+  }
+  .el-checkbox__input.is-disabled+span.el-checkbox__label {
+    color: #303133;
+  }
+}
+

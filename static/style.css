@@ -1,218 +1,256 @@
-.view{
-  width:1000px;
-  float: left;
-  padding-bottom: 50px;
+html,body{width:100%;height:100%;padding:0; margin:0;}
+.view{/*width:100%; height:100%; padding:10px;*/}
+ul,li{list-style-type: none; padding: 0; margin: 0;}
+*{
+  box-sizing: border-box;
 }
-.oarow{
-  padding:15px;
+.mask{width:100%;height:100%;top:0;left:0;position:fixed;z-index:500;  background:#000; filter:alpha(opacity=70);-moz-opacity:0.7;opacity: 0.7;}
+.mt30{margin-top:30px;}
+.mt20{margin-top:20px;}
+.mt10{margin-top:10px;}
+.oarow{}
+.clear:after{content:"\20";display:block;height:0;clear:both}
+.fl{float:left;}
+.fr{float:right;}
+.pkprocess{width:100%; height:100px; padding:0 50px; position:relative;}
+.pkprocessMain{
+  width:100%;
+  height:100px;
+  position:relative;
+  display:-webkit-box;
+  display:-webkit-flex;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-pack:justify;
+  -webkit-justify-content:space-between;
+  -ms-flex-pack:justify;
+  justify-content:space-between;
 }
-.padding_transverse_10{
-  padding:0 10px;
-}
-.teachListAZ{
-  margin-top:20px;
-  height:450px;
-  overflow-y:scroll;
-  overflow-x:hidden;
-}
-.collapseItem{
-  border-bottom:1px solid #ccc;
-}
-.collapseItem .el-collapse-item__header{
+.pkprocessMain .pkstep{
+  width:75px;
+  display:block;
+  text-align:center;
+  color:#666;
   font-size:16px;
-  padding-left:20px;
-}
-.collapseItem .el-collapse-item__content{
-  padding:10px 20px;
-  padding-bottom:10px;
-}
-.collapseItem:first-child,.el-collapse-item__header{
-  background: linear-gradient(#FFF, #f3f3f3) !important;
-}
-.selNjStu .collapseItem:first-child,.selNjStu .el-collapse-item__header{
-  background: #FFF !important;
-  text-align:center;
-  font-size:14px;
-  font-weight: bold;
-}
-.selNjStu .el-collapse{
-  border-top:none;
-}
-.selTeachTime{
-  border-collapse: collapse;
-  width:100%;
-}
-.selTeachTime td,.selTeachTime th{
-  border:1px solid #e8e8e8;
-  font-size:14px;
-  text-align:center;
-  line-height:35px;
-  height:35px;
-  width:12.5%;
-  transition:.2s all;
-}
-.selTeachTime th{
-  background:#f8f8f8;
-}
-.selTeachTime td.ck{
-  background:#ffce39;
-}
-.selTeachTime td:hover{
-  background:#f8f8f8;
-  cursor:pointer;
-}
-.selTeachTime td.ck:hover{
-  background:#ffce39;
-}
-.el-form-item__content .el-checkbox{
-  margin-left:0px !important;
-  margin-right:30px;
-  line-height:30px;
-}
-.selectStudent{
-  max-height:145px;
-  overflow:auto;
-}
-.selectStudent .selStu{
-  width:170px;
-  height:36px;
-  line-height:36px;
-  border:1px solid #e0e0e0;
-  border-radius:4px;
-  display:inline-block;
-  margin-right:10px;
-  margin-top:10px;
-  text-align:center;
+  color:#666;
   position:relative;
+  z-index:10;
 }
-.selectStudent .selStu i{
-  position:absolute;
-  width:24px;
-  height:24px;
-  font-size:24px;
-  top:7px;
-  right:7px;
-  color:#d2d2d2;
-  display:none;
+.pkprocessLine{width:95%; height:2px; background:#bfc2ca; margin-top:30px; position: absolute; left:2.5%}
+.pkstepicon{width:60px; height:60px; border-radius:30px; background-color:#c0c4cc;border:10px solid #FFF; margin:0 auto;}
+.pksteptit{font-size:16px; color:#c0c4cc;}
+.pkicon-1{background:url(../../static/img/dot-pkxt-1.png) #c0c4cc no-repeat center;}
+.pkicon-2{background:url(../../static/img/dot-pkxt-2.png) #c0c4cc no-repeat center;}
+.pkicon-3{background:url(../../static/img/dot-pkxt-3.png) #c0c4cc no-repeat center;}
+.pkicon-4{background:url(../../static/img/dot-pkxt-4.png) #c0c4cc no-repeat center;}
+.pkicon-5{background:url(../../static/img/dot-pkxt-5.png) #c0c4cc no-repeat center;}
+.pkprocessMain .pkstep.activ .pksteptit{font-size:16px; color:#449afc;}
+.pkprocessMain .pkstep.activ .pkstepicon{background-color:#449afc;}
+.pkprocessMain .pkstep.complete .pksteptit{font-size:16px; color:#606266;}
+.pkprocessMain .pkstep.complete .pkstepicon{background-color:#606266;}
+
+
+.pkleftmenu{width:200px; height:690px; border:1px solid #eaedf4; border-radius:2px; float:left;overflow: auto;}
+.pkleftmenu .tit{background:#f5f7fa; border-bottom:1px solid #eaedf4; height:40px; line-height:40px; font-size:16px; color:#333; text-indent:20px;}
+.pkrightmenu{margin-left:210px; height:690px;}
+.pkrightmenu.allright{margin-left: 0px;}
+.setKCtime{/*border:1px solid #eaedf4; float:left; width:100%;*/}
+.setKCtime .tit{background:#f5f7fa; border-bottom:1px solid #eaedf4; height:40px; line-height:40px; font-size:16px; color:#333; text-indent:20px;}
+.setKCtime .cont{padding:10px 20px; float:left; width:100%;}
+.setKCtime .kcspan{font-size:14px; color:#606266; padding-left:30px;}
+.setKCtime .pkset{/*margin:10px 0;*/}
+.sjd1{background-image:url(../../static/img/dot-pkxt-11-h.png); background-position: 10px center;background-repeat: no-repeat;padding-left: 35px;}
+.sjd2{background-image:url(../../static/img/dot-pkxt-12-h.png); background-position: 10px center;background-repeat: no-repeat;padding-left: 35px;}
+.KbMain{margin-top:10px; width:100%; height:514px; overflow:auto; float:left;}
+
+.kbinfo{width:100%; border-collapse: collapse; border-radius:2px;}
+.kbinfo td,.kbinfo th{border:1px solid #eaedf4; height:50px; line-height:30px; width:10%; text-align:center;}
+.kbinfo th{font-size:14px; color:#606266; background:#f5f7fa;}
+.layrow{padding:11px 0;}
+.layrow>span{ width:90px; display:inline-block; text-align:right; padding-right:10px;}
+
+.kbinfo th.publicTime{background:#fdf6ec; color:#e6a23c; font-size:14px; position:relative;}
+.publicTime i{position:absolute; right:17px; top:17px;transition:.2s all; cursor:pointer;}
+.publicTime i:hover{transform: rotate(90deg);}
+.kcunit{padding:9px;}
+.kcunit.nocheck span{width:100%; height:32px; background:#f4f4f4; font-size:14px; color:#959a9d; line-height:30px; border:1px solid #e0e0e0; display:block;}
+.kcunit.diff_bj span{width:100%; height:32px; background:#fef0f0; font-size:14px; color:#f66b6b; line-height:30px; border:1px solid #fcd5d5; display:block;}
+.kcunit.diff_nj span{width:100%; height:32px; background:#ecf5ff; font-size:14px; color:#449afc; line-height:30px; border:1px solid #c4ddfa; display:block;}
+.jcbox{padding:5px 40px;}
+.jcbox .jctit{padding-right:10px; width:60px; display:inline-block; text-align:right;}
+.kbinfo th .kbtime{color:#449afc;font-weight:normal; margin-left:5px; font-size:12px;}
+.kbinfo th.publicTime .kbtime{color:#e6a23c;}
+.pkbjtree{padding:10px;}
+
+/**课程设置**/
+.kcszMain{overflow:auto; position:relative; width:100%; height:80%;}
+.kcsztable{position:absolute; top:0; left:0;border-collapse: collapse; border-radius:2px; width:auto;}
+.kcsztable th{background:#f5f7fa;}
+.kcsztable th,.kcsztable td{width:350px; height:50px; line-height:50px;border:1px solid #eaedf4; text-align:center; color:#606266; font-size:14px;}
+.kcsztable .type_1,.kcsztable .type_2,.kcsztable .type_3{ font-size:14px; height:32px; line-height:30px; padding:0 20px; border-radius:4px; display:inline-block;}
+.kcsztable .type_1{background:#eff9ec;color:#63c249; border:1px solid #d3eecc;}
+.kcsztable .type_2{background:#f4f4f4;color:#959a9d; border:1px solid #e0e0e1;}
+.kcsztable .type_3{background:#fcf6ec;color:#e7a75b; border:1px solid #f7e5cb;}
+.kcsztable .stat_1{color:#f66b6b;}
+.kcsztable .stat_2{color:#449afc;}
+.totalkc{width:100%; height:40px; line-height:40px; color:#449afc; text-align:right;}
+
+/* 教师设置 */
+.Bjkbtable{border-collapse: collapse; width:100%;}
+.Bjkbtable th{background:#f5f7fa;}
+.Bjkbtable th,.Bjkbtable td{width:10px; line-height:50px; height:50px; border:1px solid #eaedf4; text-align:center; color:#606266; font-size:14px;}
+.Bjkbtable td{padding:5px;}
+.activ .choiceteachIpt{border:1px solid #dbdee5;display:block;}
+.choiceteachIpt{width:100%; height:40px; float:left; text-align:left; border:none;border-radius:2px;display:none;}
+.choiceteachIpt.activ{border:1px solid #449afc;}
+.choiceteachIpt input{display:inline-block; height:28px; line-height:28px; width:70%;border: none;
+  outline: none; padding: 0;margin-left: 15px;}
+.selectNj{width:100%;}
+.selectNj .dr1{background-image:url(../../static/img/dot-pkxt-13-h.png); background-position: 10px center;background-repeat: no-repeat;padding-left: 35px;}
+.selectNj .dr2{background-image:url(../../static/img/dot-pkxt-14-h.png); background-position: 10px center;background-repeat: no-repeat;padding-left: 35px;}
+
+/**滚动条样式**/
+.kcszMain::-webkit-scrollbar-track {
+  background: #eaedf4;
+  border-radius: 9px;
 }
-.selectStudent .selStu:hover i{
-  display:block;
-  cursor:pointer;
+.kcszMain::-webkit-scrollbar-thumb {
+  background: #449afc;
+  border-radius: 9px;
 }
-.selectStudent .selStu i:hover{
-  color:#a2a2a2;
+.kcszMain::-webkit-scrollbar-button {
+  display: none;
 }
-.selNjStu{
-  border:1px solid #e0e0e0;
-  float:left;
-  width:100%;
-  height:340px;
-  margin-top:10px;
+.kcszMain::-webkit-scrollbar {
+  height: 18px;
 }
-.selLeft{
-  width:200px;
-  height:100%;
-  float:left;
-  overflow:auto;
-  overflow-x:hidden;
-  border-right:1px solid #e0e0e0;
+
+.smallscroll::-webkit-scrollbar-track {
+  background: #eaedf4;
+  border-radius: 2px;
 }
-.selRight{
-  overflow:hidden;
+.smallscroll::-webkit-scrollbar-thumb {
+  background: #999;
+  border-radius: 2px;
 }
-.selBj{
-  padding:10px 20px;
-  padding-top:0px;
+.smallscroll::-webkit-scrollbar-button {
+  display: none;
 }
-.selNjStu .el-collapse-item__content{
-  padding-bottom:0px;
+.smallscroll::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
 }
-.selNjStu .el-checkbox{
-  display:block;
-  margin-left:30px;
-  margin-bottom:10px;
-}
-.bjstuall{
-  padding:20px;
-}
-.bjstuall span{
-  padding:5px 15px;
-  display:inline-block;
-  border-radius:6px;
-  margin-bottom:10px;
-  cursor:pointer;
-  margin-right:10px;
-}
-.bjstuall span:hover{
-  background:#e0e0e0;
-}
-.bjstuall span.seled{
-  background:#409EFF;
-  color:#FFF;
-}
-.searchMain{
-  border:1px solid #e0e0e0;
-  padding:20px 40px;
-  float:left;
-  width:100%;
-  box-sizing:border-box;
-}
-.searchBox_1{
-  float:left;
-  font-size:14px;
-  line-height:40px;
-  margin-right:10px;
-}
-.searchBox_2{
-  float:left;
-  border:1px solid #e0e0e0;
-  width:550px;
-  /*height:40px;*/
-}
-.cxtj_sel .el-input--suffix .el-input__inner{
-  border:none;
-  width:110px;
-  border-right:1px solid #e0e0e0;
-  border-radius:0px;
-}
-.cxtj_sel .ssnr input{
-  border:none;
-}
-.moreseting{
-  line-height:40px;
-  margin-left:20px;
-  padding-left:25px;
-  cursor:pointer;
-  transition:.3s all;
-  position:relative;
-}
-.moreseting:hover{
-  color:#999;
-}
-.el-icon-arrow-down.active:before{
-  content: "\E605";
-}
-.detailSearch{
-  width:100%;
-  margin-top:20px;
-}
-.rowline{
-  border-bottom:1px dotted #e0e0e0;
-}
-.el-radio{
-  margin-right:30px;
-}
-.el-radio+.el-radio{
-  margin-left:0;
-  margin-right:30px;
-}
-.detailSearch .el-form-item{
-  margin-bottom:0px;
-  padding:10px 0;
-}
-.selSearchList{
-  font-size:12px;
-}
+
+
+
+/*2.课程规则条件*/
+.Kctips{width: 100%; height: 32px; line-height: 32px; background: #fef0f0; border-radius: 2px; float: left; padding-left: 25px; font-size: 14px; color: #f66b6b; position: relative;}
+.Kctips.green{width: 100%; height: 32px; line-height: 32px; background: #eff9ec; border-radius: 2px; float: left; padding-left: 25px; font-size: 14px; color: #63c249;  position: relative;}
+.Kctips .close{position: absolute; top:0px; right: 25px; cursor: pointer;transition: .1s all;}
+.Kctips .close:hover{transform: scale(.9);}
+.kcunit.stat_1>span{width: 100%;height: 32px;background: #f4f4f4;font-size: 14px;color: #959a9d;line-height: 30px;border: 1px solid #e0e0e0;display: block; position: relative;}
+.kcunit.stat_2>span{width: 100%;height: 32px;background: #ecf5ff;font-size: 14px;color: #449afc;line-height: 30px;border: 1px solid #c4ddfa;display: block; position: relative;}
+.kcunit.stat_3>span{width: 100%;height: 32px;background: #fef0f0;font-size: 14px;color: #f66b6b;line-height: 30px;border: 1px solid #fcd5d5;display: block; position: relative;}
+.kcunit.unittips::after{content: "设置排课"; text-align: center; line-height:30px; color:#449afc; font-size: 14px;}
+.kcunit i.el-icon-close{position: absolute; right: 5px; top:8px; transition: .4s all; cursor: pointer;}
+.kcunit i.el-icon-close:hover{transform: rotate(-90deg);}
+.kcunit>span:hover{z-index:1;}
+
+.tips{position: absolute; padding: 0 10px; background: #333436; border-radius: 3px; height:34px; line-height: 34px; bottom: -40px; white-space:nowrap; color:#FFF; left: 50%; transform: translateX(-50%); }
+.tips::after{content: '\20'; position: fixed; top:-12px; left: 50%; transform:translateX(-50%); width: 0;height: 0;border-width: 6px;border-style: solid;border-color:transparent transparent #333436  transparent;}
+.gentable{border-collapse: collapse; width:100%;}
+.gentable th{background:#f5f7fa;}
+.gentable th,.gentable td{width:300px; line-height:40px; height:50px; border:1px solid #eaedf4; text-align:center; color:#606266; font-size:14px;}
+.gentable td{padding:5px;}
+.gentable th.xh,.gentable td.xh{width:50px;}
+
+.delRecord{color:#f66b6b !important; cursor: pointer;}
+
+/**教师设置**/
+.tcfilter{padding:15px 15px 5px 15px;}
+.setcompletion .stat_1{ background:#ecf5ff; font-size:14px; color:#409EFF; border:1px solid #b3d8ff; height:40px; line-height: 40px;padding: 0 20px;text-align: center; border-radius:4px; display:inline-block; cursor: pointer;}
+.setcompletion .stat_1:hover{background:#409EFF;color: #fff;transition: .1s;}
+/* .stat_1+.stat_1{margin-left: 10px;} */
+
+.stepHBbox{width:200px; height:420px; border:1px solid #eaedf4; border-radius:2px; float:left;}
+.stepHBbox .tit{background:#f5f7fa; border-bottom:1px solid #eaedf4; height:40px; line-height:40px; font-size:16px; color:#333; text-indent:20px;}
+.stepHBbox .stepCont{overflow:auto; height: 378px;}
+.arrowLeft{height:420px; width: 100px; float: left; font-size: 50px; color:#606266; text-align: center; line-height: 420px;}
+.handleHBbox{width: 150px; float: left; height: 420px;}
+.handleHBbox .Hbopt{width:100px; margin: 150px auto;}
+.handleHBbox .Hbopt button{float: left; margin: 10px auto;}
+.HbResultBox{min-height:420px; overflow: hidden;}
+
+/**规则列表**/
+.ruleTips{width:100%; font-size:14px; color:#333; padding:0 5px;}
+.mingentable th,.mingentable td{width: 100px;}
+
+/**自动排课结果**/
+.autoPkMain{flex: 1;text-align: center;}
+.autoPkBtn{margin: 200px auto;}
+.autoPkIng{z-index: 999;position: absolute;top: 50%;left: 50%;transform: translate(-50%,-50%);text-align: center;color: #449afc;font-size: 14px;}
+.autoPkResult{margin: 200px auto;}
+.autoResultInfo{color: #63c249;font-size: 16px;text-align: center;padding: 30px 0;}
+.autoResultCondition{width: 520px;border:1px solid #eaedf4;border-radius: 3px;padding: 0 30px;min-height: 100px;}
+.Conditions{position: relative;}
+.Conditions ul{margin: 5px 0;}
+.Conditions li{padding: 5px 0; font-size: 14px; color: #606266;}
+.Conditions .ckkb{position: absolute; right: 0; top:50%; transform: translateY(-50%);}
+.Conditions .span_red{color: #f66b6b;}
+.UnwantedClass{border-top: 1px solid #eaedf4; height: 80px; color: #449afc;font-size: 14px; line-height: 80px;text-decoration:underline; cursor: pointer;}
+.againkb{ margin-top: 24px;}
+.bjbox{max-height:250px; overflow: auto;}
+.UnsatisfiedBox{ width: 100%; max-height:300px; overflow: auto;}
+.Unsatisfied li{padding:8px 0; color: #606266; font-size: 14px;}
+
+/**调整课程**/
+.statInfoTips{ padding-top:8px;}
+.statInfoTips .stattip{padding-left:30px; position: relative; line-height:20px; font-size: 14px; color: #606266; margin-left: 30px; display: inline-block;}
+.statInfoTips .stattip.stat_1::after{content:'\20'; position: absolute; width: 20px; height: 20px; background: #63c249; border-radius:2px; top:0; left:0;}
+.statInfoTips .stattip.stat_2::after{content:'\20'; position: absolute; width: 20px; height: 20px; background: #eff9ec; border: 1px solid #d3eecc; border-radius:2px; top:0; left:0;}
+.statInfoTips .stattip.stat_3::after{content:'\20'; position: absolute; width: 20px; height: 20px; background: #fcf6ec; border: 1px solid #f7e5cb; border-radius:2px; top:0; left:0;}
+
+.tzkcTable td span{cursor: pointer;}
+.tzkcTable td>span.stat_1{width: 100%;height: 32px;background: #eff9ec;font-size: 14px;color: #63c249;line-height: 30px;border: 1px solid #d3eecc; border-radius: 2px; display: block; position: relative;}
+.tzkcTable td>span.stat_2{width: 100%;height: 32px;background: #fcf6ec;font-size: 14px;color: #e6a23c;line-height: 30px;border: 1px solid #f7e5cb; border-radius: 2px; display: block; position: relative;}
+.tzkcTable td>span.stat_3{width: 100%;height: 32px;background: #63c249;font-size: 14px;color: #FFF;line-height: 30px;border: 1px solid #63c249; border-radius: 2px; display: block; position: relative;}
+.tzkcTable .zcq>span{width: 18%; margin: 5px 1%; float: left; height: 32px;line-height: 30px;border-radius: 2px; display: block; position: relative;}
+.tzkcTable .zcq{line-height: 30px;}
+.tzkcTable .zcq>span{background: #FFF;font-size: 14px;color: #606266;border: 1px solid #e0e0e0;}
+.tzkcTable .zcq>span.stat_1{background: #eff9ec;font-size: 14px;color: #63c249;border: 1px solid #d3eecc;}
+.tzkcTable .zcq>span.stat_2{background: #fcf6ec;font-size: 14px;color: #e6a23c;border: 1px solid #f7e5cb;}
+.tzkcTable .zcq>span.stat_3{background: #63c249;font-size: 14px;color: #FFF;border: 1px solid #63c249;}
+
+.tzteachbox{}
+.tzteachbox .tzteachtit{font-size: 14px; color:#606266;}
+.tzteachbox .tzteachUnit{padding-right:20px;}
+
+/**查看课表**/
+.tzkcTable th.publicTime{background:#fdf6ec; color:#e6a23c; font-size:14px; position:relative; line-height:50px;}
+.teachKbInfo{font-size: 14px; color: #606266;}
+.teachKbInfo span{color: #449afc; text-decoration: underline;}
+
+.sumKBBox{overflow:hidden; position: relative;}
+/* .KbBoxScroll{float: left; overflow: auto; white-space: nowrap; width: 100%;} */
+.KbBoxScroll{float: left; white-space: nowrap;}
+.KbBoxScroll-ksfb{float: left; white-space: nowrap;}
+.kbbcFixed{position: absolute; top:0; left: 0;}
+.kbbcFixed table{border-collapse: collapse; min-width:140px;}
+.kbbcFixed table td{background:#f5f7fa; min-width:140px; vertical-align: middle; height:66px; border:1px solid #eaedf4; font-weight: bold; text-align:center; color:#606266; font-size:14px;}
+.zkbtable{border-collapse: collapse;}
+#pane-2 .zkbtable{margin-left: 140px;}
+#pane-3 .zkbtable{margin-left: 280px;}
+.zkbtable th{background:#f5f7fa;}
+.zkbtable th,.zkbtable td{min-width:140px; vertical-align: middle; height:66px; border:1px solid #eaedf4; text-align:center; color:#606266; font-size:14px;}
+.sumKBBox{height: 594px;overflow-y: auto;overflow-x: auto;width: 100%;}
+
+.kbzl_mzl{font-size: 18px; color:#303133; font-weight: bold;}
+.kbzl_mz_info{color: #606266; font-size: 14px; line-height: 24px;}
+.kbzl_mz_info .mz{color: #449afc;}
+.kbzl_mz_info .bmz{color: #f66b6b;}
+.kbExplain{border-top: 1px solid #e0e0e0; font-size: 14px; color:#303133; padding-top: 20px;}
+.kbExplain .kbExplain_tit{font-weight: bold;}
+.kbExplain .kbExplain_cont{line-height: 34px;}
 .selectSearch{
   padding-top:10px;
 }
@@ -322,3 +360,493 @@
   float:left;
   position:relative;
 }
+
+.clear:after{content:"\20";display:block;height:0;clear:both}
+.filter-container{
+  min-width: 0 !important;
+}
+.filter-container h4{
+  height: 32px; line-height: 32px;
+}
+.filter-container h4 button{
+  margin-left: 10px;
+  vertical-align: middle;
+}
+.steps-user-box{
+  display: inline-block;
+  position: relative;
+  margin-bottom: 20px;
+}
+.steps-user-box .el-icon-arrow-right{
+  font-size: 30px; line-height: 40px;
+}
+.steps-user-con{
+  float: left; position: relative;
+}
+.steps-user-con .el-icon-close{
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 1;
+  display: none;
+  cursor: pointer;
+}
+.steps-user-con:hover .el-icon-close{
+  display: block;
+}
+.steps-user-con:hover .boxcard{
+  background: #EDF5FA;
+}
+.steps-user-con .boxcard{
+  min-width: 140px;
+  padding-left: 16px;
+  background: #f8f8f8;
+  border-radius: 4px;
+  -webkit-transition: all .2s;
+  -o-transition: all .2s;
+  transition: all .2s;
+  cursor: move;
+}
+.steps-user-con .boxcard .flexboxcard{
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  height: 40px;
+  font-size: 12px;
+  color: #333;
+  padding-right: 16px;
+}
+.steps-user-con .boxcard span{
+  vertical-align: top;
+  line-height: 24px;
+  margin-left: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  max-width: 280px;
+}
+.rowBox{
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  margin: 20px 0 10px;
+}
+.rowlabel{
+  padding-left: 30px!important;
+  display: block;
+  float: left;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  width: 120px;
+  margin-top: 10px;
+}
+.rowlabel span{
+  color: #999;
+}
+.rowcon{
+  display: block;
+  float: left;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  width: 80%;
+  min-width: 750px;
+
+}
+.approvalAdd{
+  display: inline-block;
+}
+.approvalAdd i{
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  font-size: 28px;
+  color: #999;
+  margin-top: 6px;
+}
+.spanlabel{
+  text-align: right;
+  width: 16.6666666667%;
+  display: block;
+  float: left;
+  padding-right: 30px;
+  color: #999;
+  margin-top: 4px;
+}
+.spancon{
+  display: block;
+  float: left;
+  width: 83.3333333333%;
+}
+.sprBox{
+  margin-bottom: 20px;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+}
+.sprBox .el-input__inner{
+  height: 32px;
+  font-size: 12px;
+}
+.radioblock .el-radio{
+  display: block;
+  margin: 8px 0;
+}
+.radioblock .el-radio+.el-radio{
+  margin-left: 0;
+}
+.checkblock{
+  margin-top: 5px;
+}
+.tjtips{
+  display: block;
+  margin-bottom: 10px;
+}
+.transferBox{
+  width: 100%;
+  overflow: hidden;
+}
+.transferpar{
+  width: 50%;
+  float: left;
+  padding-right: 10px;
+}
+.transferpar:last-child{
+  padding-left: 10px;
+}
+.transferpar .title{
+  font-size: 16px;
+  color: #363636;
+  padding: 14px 0px;
+}
+.transferpar .con{
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #dedede;
+  border-radius: 4px;
+  background: #f4f6f8;
+  height: 362px;
+}
+.transferpar .ryCon{
+  margin-top: 10px;
+}
+.transferpar .ryCon .list_item{
+  width: 100%;
+  list-style: none;
+  padding: 5px;
+  font-size: 14px;
+  color: #363636;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  padding-right: 45px;
+}
+.transferpar .ryCon .list_item  i{
+  color: #38adff;
+  font-size: 14px;
+  position: absolute;
+  right: 0px;
+  cursor: pointer;
+  padding-left: 10px;
+  border-left: 1px solid #eee;
+  -webkit-text-stroke-width: inherit;
+  text-stroke-width: inherit;
+}
+.transferpar .ryCon .cycon{
+  overflow: auto;
+  height: 247px;
+}
+.navbarbox{
+  position: relative;
+  margin: 5px 0;
+}
+.navbarbox .item{
+  max-width: 33%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #38adff;
+  float: left;
+  position: relative;
+  cursor: pointer;
+  font-size: 14px;
+  padding-left: 22px;
+  line-height: 20px;
+}
+.navbarbox .item:last-child{
+  color: #333;
+  cursor: default;
+}
+.navbarbox .item i{
+  position: absolute;
+  left: 2px;
+  color: #333;
+  line-height: 20px;
+}
+.transferpar .ryCon .el-tree{
+  background: none;
+}
+.transferpar .ryCon .el-tag{
+  margin: 5px 5px 5px 0;
+}
+.tagdiv{
+  float:left;
+}
+.tagdiv .el-tag{
+  float:left; margin-top:4px;
+}
+.tagdiv .approvalAdd{
+  float:left;
+}
+/*.el-card{
+  cursor: move;
+}
+.box-card .steps-user-box{
+  margin-bottom:10px;
+}
+.box-card .steps-user-box:last-child .el-icon-arrow-right{
+  color:#fff
+}
+.box-card .rowBox{
+  margin:10px 0;
+}*/
+.diag-container .rowBox{
+  margin:5px 0;
+}
+.diag-container .rowcon{
+  width: 540px; min-width: 540px;
+  margin-top: 10px;
+}
+.diagrowBox .el-checkbox+.el-checkbox{
+  margin-left: 0;
+}
+.diagrowBox .el-checkbox{
+  margin-right: 30px;
+}
+.rowBox .el-input-number{
+  width: 100px;
+}
+.rowBox .el-select{
+  width: 80px;
+}
+.diaggroup{
+  padding: 0 32px;
+}
+.diagsettj .el-dialog__body{
+  padding: 0px 20px 30px;
+}
+.diag-container h5{
+  padding-bottom: 10px;
+}
+.diag-container .steps-user-con .boxcard .flexboxcard{
+  height: 30px; line-height: 30px;
+}
+.diag-container .steps-user-box .el-icon-arrow-right{
+  line-height: 30px; font-size: 24px;
+}
+.diag-sprbox .rowcon{
+  margin-top: 0;
+}
+.otherSet .el-select {
+  width: auto;
+}
+
+/* 排课的公共样式 */
+.pkxt-pksz .span-top {padding-top: 4px;display: block;height: 23.5px;line-height: 23.5px;}
+.pkxt-pksz .span-bottom {padding-bottom: 4px;display: block;height: 23.5px;line-height: 23.5px;}
+/* /排课的公共样式 */
+
+/*  排课-规则条件-课程固定排不排 */
+#KbMain-zhangzheng .el-table__row td {padding: 0;}
+#KbMain-zhangzheng .el-table__row {height: 47px;}
+#KbMain-zhangzheng .el-table__row .cell {width: 100%;height: 100%;padding: 0;line-height: 47px;}
+#KbMain-zhangzheng .el-table__row .cell .content {height: 47px;width: 100%;}
+#KbMain-zhangzheng {box-sizing: border-box;overflow: hidden;}
+#KbMain-zhangzheng .bar-item {height: 10px;background-color: #eee;}
+#KbMain-zhangzheng .bar-item div {display: none;}
+.kssz .el-table .span-item {color: #e6a23c;background-color: #fdf6ec;}
+#KbMain-zhangzheng .close {position: absolute;top: 0px;right: 0;cursor: pointer;transition: 0.1s all;}
+#KbMain-zhangzheng .close:hover {transform: scale(0.9);}
+.kssz .el-date-editor .el-range-separator {width: 6%;}
+.kssz .el-scrollbar__wrap {overflow: hidden;}
+/*  /排课-规则条件-课程固定排不排 */
+
+/* 排课-规则条件-教师设置 */
+.jssz .el-checkbox-button:first-child .el-checkbox-button__inner {
+  margin-top: 10px !important;
+}
+.jssz .el-card__header {
+  background: #f5f7fa;
+  padding: 9px 20px !important;
+}
+.jssz .el-table td {
+  padding: 0;
+  height: 47px;
+}
+.jssz .el-table .cell {
+  padding: 0;
+  height: 47px;
+  line-height: 47px;
+  text-align: center;
+}
+.jssz .el-table .cell > div {
+  height: 100%;
+  width: 100%;
+}
+.jssz .el-table .commonStyle {
+  color: #e6a23c;
+  background-color: #fdf6ec;
+}
+.jssz .el-table .commonblank,
+.jssz .el-table .commonblank td,
+.jssz .el-table .commonblank td .cell {
+  height: 10px;
+  background-color: #eee;
+}
+.jssz .el-table td,
+.jssz .el-table th {
+  padding: 0 !important;
+}
+.jssz .el-table .cell .el-input__inner {
+  height: 47px;
+  line-height: 47px;
+  border-radius: 0 !important;
+}
+.jssz .el-card {
+  margin-bottom: 20px;
+}
+.jssz .el-scrollbar .el-scrollbar__wrap{
+  margin-bottom: 0px !important;
+  margin-right: 0px !important;
+}
+.jssz .HbResultBox .el-card__body {
+  min-height: 378px;
+}
+/* /排课-规则条件-教师设置 */
+
+
+.jktjsz .pk-title {
+  padding: 0 21px;
+  height: 34px;
+  background-color: #f5f7fa;
+  line-height: 34px;
+}
+.jktjsz .el-card__header {
+  padding: 0;
+}
+.jktjsz aside .el-card__body {
+  padding: 0;
+}
+.pk-jksz .el-table--scrollable-x .el-table__body-wrapper::-webkit-scrollbar-track {
+  background: #eaedf4;
+  border-radius: 2px;
+}
+.pk-jksz .el-table--scrollable-x .el-table__body-wrapper::-webkit-scrollbar-thumb {
+  background: #999;
+  border-radius: 2px;
+}
+.pk-jksz .el-table--scrollable-x .el-table__body-wrapper::-webkit-scrollbar-button {
+  display: none;
+}
+.pk-jksz .el-table--scrollable-x .el-table__body-wrapper::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+
+.jktz .el-select-dropdown__item {
+  padding-left: 10px;
+}
+
+.ksxt_kctz .el-tabs__nav-wrap::after {
+  background-color: transparent;
+}
+.ksxt_kctz .el-tabs__active-bar {
+  background-color: transparent;
+}
+.ksxt_kctz .el-tabs--right .el-tabs__header.is-right {
+  float: left;
+}
+
+
+.ksxt_ckpk .el-tabs__nav-wrap::after {
+  background-color: transparent;
+}
+.ksxt_ckpk .el-tabs__active-bar {
+  background-color: transparent;
+}
+.ksxt_ckpk .el-tabs--right .el-tabs__header.is-right {
+  float: left;
+}
+
+.ksxt_ckpk .el-table--scrollable-x .el-table__body-wrapper::-webkit-scrollbar-track {
+  background: #eaedf4;
+  border-radius: 2px;
+}
+.ksxt_ckpk .el-table--scrollable-x .el-table__body-wrapper::-webkit-scrollbar-thumb {
+  background: #999;
+  border-radius: 2px;
+}
+.ksxt_ckpk .el-table--scrollable-x .el-table__body-wrapper::-webkit-scrollbar-button {
+  display: none;
+}
+.ksxt_ckpk .el-table--scrollable-x .el-table__body-wrapper::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+.ksxt_ckpk .el-card__header {
+  padding: 10px 20px;
+  background-color: #f5f7fa;
+  border-bottom: 1px solid #ebeef5;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.ksxt_ckpk .el-card__body {
+  padding: 10px;
+}
+.ckpk-content .el-card__body {
+  padding: 0;
+}
+.ckpk-content .el-card {
+  border: none;
+}
+.ckpk-content .el-card__header {
+  border: 1px solid #ebeef5;
+  border-bottom: none;
+}
+
+/* 阅读考级-统计模块 */
+.readcount .el-input--medium .el-input__inner, .examcount .el-input--medium {
+  height: 40px;
+  line-height: 40px;
+}
+.examCount .el-input--medium .el-input__inner, .examcount .el-input--medium {
+  height: 40px;
+  line-height: 40px;
+}
+.readcount .form-item, .examCount .form-item {
+  margin-top: 20px;
+}
+.readcount .inline-item, .examCount .inline-item {
+  width: 300px;
+}
+/* /阅读考级-统计模块 */
+
+/** 排考系统-监考条件设置**/
+.jktjsz-dialog .el-checkbox+.el-checkbox {
+  margin-left: 0px;
+}
+.jktjsz-dialog .el-checkbox {
+  margin-right: 30px;
+}
+
+.jktjsz-dialog .el-checkbox__label {
+  width: 44px;
+}
+
+

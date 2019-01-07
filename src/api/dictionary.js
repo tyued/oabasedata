@@ -15,3 +15,11 @@ export function getbmInfo_dm(query) {
     params: query
   });
 }
+
+export function getjlcxInfo(query) {
+  return fetch({
+    url: '/jcDmtm/jlcx',
+    method: 'get',
+    params: query
+  });
+}

@@ -3,10 +3,10 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>{{spsl.slmc}}</span>
-        <el-button v-if="spsl.slzt==1" type="primary" size="mini" round>审批中</el-button>
-        <el-button v-else-if="spsl.slzt==2" type="info" size="mini" round>已撤销</el-button>
-        <el-button v-else-if="spsl.slzt==3" type="success" size="mini" round>审批通过</el-button>
-        <el-button v-else-if="spsl.slzt==4" type="danger" size="mini" round>审批拒绝</el-button>
+        <el-button v-if="spsl.slzt==1" type="primary" size="mini" round disabled style="cursor: move">审批中</el-button>
+        <el-button v-else-if="spsl.slzt==2" type="info" size="mini" round disabled style="cursor: move">已撤销</el-button>
+        <el-button v-else-if="spsl.slzt==3" type="success" size="mini" round disabled style="cursor: move">审批通过</el-button>
+        <el-button v-else-if="spsl.slzt==4" type="danger" size="mini" round disabled style="cursor: move">审批拒绝</el-button>
       </div>
       <div v-for="bdx in spsl.ywxx" :key="bdx.bdxid" class="text item">
         {{bdx.bdxmc}}:{{bdx.ywz}}
@@ -63,6 +63,7 @@
     methods: {
       cxslxq() {
         api.cxspslxx(this.slid).then(response => {
+          console.log(response)
           this.spsl = response;
           this.allbz = response.slbzList;
            this.clspbz(response.slbzList);

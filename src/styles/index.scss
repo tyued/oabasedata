@@ -2,7 +2,6 @@
 @import './btn.scss';
 @import './element-ui.scss';
 @import './sidebar.scss';
-
 body {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -10,12 +9,19 @@ body {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
 }
+// 去掉输入框的背景 lcy 2018-9-28
+input:-webkit-autofill
+{
+  -webkit-box-shadow: 0 0 0 1000px white inset;  //使用足够大的纯色内阴影覆盖黄色背景
+}
+#app{
+  height:100%;
+  }
 
 label {
   font-weight: 700;
@@ -105,26 +111,28 @@ code {
   opacity: 0;
 }
 
-
 //main-container全局样式
 .app-container {
   padding: 20px;
 }
+
 .components-container {
   margin: 30px 50px;
   position: relative;
 }
+
 .pagination-container {
   margin-top: 30px;
 }
 
 .editor-container .CodeMirror {
-  height: 100%!important;
+  height: 100% !important;
 }
 
-.text-center{
+.text-center {
   text-align: center
 }
+
 .svg-icon {
   width: 1em;
   height: 1em;
@@ -223,7 +231,6 @@ code {
   }
 }
 
-
 //refine vue-multiselect plugin
 .multiselect {
   line-height: 16px;
@@ -234,8 +241,9 @@ code {
 }
 
 //refine simplemde
-.simplemde-container{
-  .editor-toolbar.fullscreen,.CodeMirror-fullscreen{
+.simplemde-container {
+  .editor-toolbar.fullscreen,
+  .CodeMirror-fullscreen {
     z-index: 1003;
   }
 }
@@ -275,4 +283,112 @@ code {
   .github-corner .octo-arm {
     animation: octocat-wave 560ms ease-in-out
   }
+}
+
+.treebox-card .el-card__body{ padding: 0;}
+.container-block{
+  width:100%;
+  margin: 20px 0;
+}
+
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 14px;
+  color: #8c939d;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+}
+.avatar {
+  width: 60px;
+  height: 60px;
+  display: block;
+}
+
+.TcheckList{
+  padding-bottom: 20px;
+  .el-checkbox-group{
+    padding-left: 20px;
+  }
+}
+.setCheckDiag{
+  .el-dialog__body{
+    max-height: 580px;
+    overflow: auto;
+  }
+}
+// 学分系统
+.Xmqz_setLi{
+  .Xmqz_setTit{
+    font-size: 16px;
+    padding: 0 0 20px;
+    span{
+      font-weight: bold;
+      margin-right: 8px;
+    }
+  }
+  .Xmqz_setItem{
+    .el-col-8{
+      max-width: 300px;
+    }
+    .el-col-5{
+      width:auto;
+    }
+    .el-form-item__content{
+        margin-left: 0!important;
+        .el-select{
+          width:100%;
+        }
+    }
+    .el-form-item{
+      margin-bottom: 0;
+    }
+    .el-col{
+      margin-bottom: 20px;
+    }
+    .ysfh{
+      display: block;
+      line-height: 32px;
+      text-align: center;
+      width: 100%;
+    }
+    .el-col-offset-1{
+      margin-left: 0;
+    }
+    .el-form-item__content{
+      line-height: 1;
+    }
+    .el-col-2{
+      min-width: 100px;
+      .el-input-group__append{
+          padding: 0 5px;
+      }
+  }
+
+}
+
+}
+
+.el-table{
+  .curRow{
+    color: red;
+  }
+}
+
+.el-header{
+  z-index: 101;
+}
+
+.el-loading-mask{
+  z-index: 100;
 }

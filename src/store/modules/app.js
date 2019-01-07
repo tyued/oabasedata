@@ -3,20 +3,30 @@ import Cookies from 'js-cookie';
 const app = {
   state: {
     sidebar: {
-      opened: !+Cookies.get('sidebarStatus')
+      opened: !+Cookies.get('sidebarStatus'),       
     },
+    sidebarcurMenuId:Cookies.get('sidebarcurMenuId'),
+    sidebarcurMenu:'dashboard',       //首页 
     theme: 'default',
     livenewsChannels: Cookies.get('livenewsChannels') || '[]',
     visitedViews: []
   },
   mutations: {
-    TOGGLE_SIDEBAR: state => {
-      if (state.sidebar.opened) {
+    TOGGLE_SIDEBAR: (state,view) => {
+      if (view.opened) {
         Cookies.set('sidebarStatus', 1);
       } else {
         Cookies.set('sidebarStatus', 0);
       }
-      state.sidebar.opened = !state.sidebar.opened;
+      state.sidebar.opened = !view.opened;
+      state.sidebar.curMenuId = view.curMenuId;
+    },
+    Set_CurMenuId:(state,view) => {
+      Cookies.set('sidebarcurMenuId', view);
+      state.sidebarcurMenuId = view;
+    },
+    Set_CurMenu:(state,view) => {
+      state.sidebarcurMenu = view;
     },
     ADD_VISITED_VIEWS: (state, view) => {
       if (state.visitedViews.some(v => v.path === view.path)) return
@@ -34,8 +44,14 @@ const app = {
     }
   },
   actions: {
-    ToggleSideBar: ({ commit }) => {
-      commit('TOGGLE_SIDEBAR')
+    ToggleSideBar: ({ commit } , view) => {
+      commit('TOGGLE_SIDEBAR',view)
+    },
+    SetCurMenuId: ({ commit } , view) => {
+      commit('Set_CurMenuId',view)
+    },
+    SetCurMenu: ({ commit } , view) => {
+      commit('Set_CurMenu',view)
     },
     addVisitedViews: ({ commit }, view) => {
       commit('ADD_VISITED_VIEWS', view)

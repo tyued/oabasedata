@@ -85,6 +85,14 @@ export function scoreReported(query, type) {
       params: query
     });
 }
+// 通用版成绩上报
+export function CurrencyReport(query) {
+  return fetch({
+    url: '/api/netcore/smartcredit/v1/Xmcj/CurrencyReport',
+    method: 'post',
+    data: query
+  });
+}
 
 
 export function CheckXtResult(query) {//查看系统结果
@@ -143,6 +151,16 @@ export function dealAllowSupplement(query) {
   });
 }
 
+export function BatchexportExcel(query) {
+  return fetch({
+    url: '/api/netcore/smartcredit/v1/Xmcj/BatchExportExcel',
+    method: 'get',
+    responseType: 'arraybuffer',
+    params: query
+  });
+}
+
+
 
 //查询班级
 export function getBj(query) {
@@ -161,3 +179,28 @@ export function getXkInfo(query) {
   });
 }
 
+//上传图片
+export function UploadPictures(query) {
+  return fetch({
+    url: '/api/netcore/smartcredit/v1/Xmcj/UploadPictures',
+    method: 'post',
+    params: query
+  });
+}
+//通用的批量录入(成绩，学分，累积量，等级，图文，健康)接口（支持单个）
+export function BatchInputValue(query) {
+  return fetch({
+    url: '/api/netcore/smartcredit/v1/Xmcj/BatchInputValue',
+    method: 'post',
+    data: query
+  });
+}
+
+// 项目--录入--删除项目成绩数据
+export function DeleteCreditValue(data) {
+  return fetch({
+      url: '/api/netcore/smartcredit/v1/Xmcj/DeleteCreditValue',
+      method: 'post',
+      data: data
+  });
+}

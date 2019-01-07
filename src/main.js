@@ -15,7 +15,8 @@ import '../element-variables.scss';
 import NProgress from 'nprogress'; // Progress 进度条
 import 'nprogress/nprogress.css';// Progress 进度条 样式
 import 'normalize.css/normalize.css';// normalize.css 样式格式化
-import 'assets/iconfont/iconfont'; // iconfont 具体图标见https://github.com/PanJiaChen/vue-element-admin/wiki
+import '../static/tinymce/icon/iconfont.css';// normalize.css 样式格式化
+import 'assets/iconfont/iconfont'; // iconfont 具体图标见https://github.com/PanJiaChen/vue-element- /wiki
 import * as filters from './filters'; // 全局vue filter
 import Multiselect from 'vue-multiselect';// 使用的一个多选框组件，element-ui的select不能满足所有需求
 import 'vue-multiselect/dist/vue-multiselect.min.css';// 多选框组件css
@@ -46,6 +47,16 @@ function _getQueryId(name) {
   return '';
 }
 
+const GetYear = () => {
+  const date = new Date()
+  let y = ''
+  y = date.getFullYear()
+  return y
+}
+const year = GetYear()
+store.dispatch('set_batch', GetYear());
+window.localStorage.setItem('year', year);
+
 const username = _getQueryId('username')
 const password = _getQueryId('password')
 if (username && password) {
@@ -63,7 +74,6 @@ if (username && password) {
   });
 }
 
-
 // register global progress.
 const whiteList = ['/login', '/authredirect'];// 不重定向白名单
 router.beforeEach((to, from, next) => {
@@ -73,15 +83,21 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' });
     } else {
       if (store.getters.menus === undefined) { // 判断当前用户是否已拉取完user_info信息
+        store.dispatch('GetDict')
+
         store.dispatch('GetInfo').then(info => { // 拉取user_info
+          
           window.localStorage.setItem('xxdm', info.xxdm);
           window.localStorage.setItem('userid', info.id);
           window.localStorage.setItem('name', info.name);
           window.localStorage.setItem('lguserType', info.type);
           window.localStorage.setItem('usercode', info.usercode);
+          window.localStorage.setItem('username', info.username);
+          window.localStorage.setItem('xxmc', info.xxmc);
+          window.localStorage.setItem('xxbxlxm', info.xxbxlxm);
+          store.dispatch('set_schoolCode', info.xxdm);
           // window.localStorage.setItem("xxdm","1438")
           // console.log(info)
-
           const menus = {};
           for (let i = 0; i < info.menus.length; i++) {
             menus[info.menus[i].code] = true;

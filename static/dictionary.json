@@ -1993,7 +1993,19 @@
             "text": "幼儿园",
             "parentId": null,
             "type": "XZLX"
-        }
+        },
+        {
+        "id": "006",
+        "text": "教育局",
+        "parentId": null,
+        "type": "XZLX"
+       } ,
+      {
+        "id": "007",
+        "text": "职高技校",
+        "parentId": null,
+        "type": "XZLX"
+      }
     ],
     "JY/T_1001_XKMLKJ": [
         {
@@ -38263,7 +38275,7 @@
             "type": "GB/T_14946.1_A8"
         }
     ],
- 
+
 
     "qingshuguanxi": [
         {

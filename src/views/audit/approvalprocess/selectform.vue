@@ -1,8 +1,8 @@
 <template>
   <div class="app-container calendar-list-container">
 
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary"  @click="bcspmb(1)">保存</el-button>
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" @click="bcspmb(0)">保存并启用</el-button>
+    <el-button class="filter-item" style="margin-left: 10px;" type="primary"  @click="bcspmb(1)" :disabled="changeSure">保存</el-button>
+    <el-button class="filter-item" style="margin-left: 10px;" type="primary" @click="bcspmb(0)" :disabled="changeSure">保存并启用</el-button>
 
     <div class="container-main">
         <div class="container-mleft">
@@ -41,16 +41,16 @@
             <h3>表单设置</h3>
             <el-form ref="form" label-width="100px">
               <el-form-item label="审批名称">
-                <el-input placeholder="请假" maxLength="20" style="width: 190px;" v-model="lcmc"></el-input>
+                <el-input placeholder="请填写审批名称" maxLength="20" style="width: 190px;" v-model="lcmc"></el-input>
                 <span>{{ wordcount }}/20</span>
               </el-form-item>
 
               <el-form-item label="选择分组">
                 <el-select placeholder="请选择分组" v-model="lcdl">
                   <el-option label="出勤休假" value="lx1"></el-option>
-                  <el-option label="人事" value="lx2"></el-option>
-                  <el-option label="财务" value="lx3"></el-option>
-                  <el-option label="其他" value="lx4"></el-option>
+                  <el-option label="人事管理" value="lx2"></el-option>
+                  <el-option label="财务管理" value="lx6"></el-option>
+                  <el-option label="教务管理" value="lx7"></el-option>
                 </el-select>
               </el-form-item>
             </el-form>
@@ -58,7 +58,7 @@
             <hr>
             <h3>
               当前请假类型包括:
-              <el-button class="filter-item" @click="holidayConfig" style="margin-left: 10px;" type="primary">修改</el-button>
+              <el-button class="filter-item" @click="holidayConfig" style="margin-left: 10px;" type="primary">前往修改</el-button>
             </h3>
             <el-table :data="tableList" v-loading.body="listLoading" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="假期名称">
@@ -81,7 +81,6 @@
 import * as bdxxApi from 'api/audit/approvalprocess/splcbd';
 import * as mbxxApi from 'api/audit/approvalprocess/splcmbxx';
 import { page } from 'api/audit/holidaymanager/index'
-import { getXXMess } from 'api/dict'
 export default {
   name: 'audittemplate',
   data() {
@@ -89,14 +88,14 @@ export default {
       activeName: '',
       tabPosition: 'left',
       listLoading: false,
-      dictMap: {},
+      dictMap: { qjdw: [{ id: '1', text: '按天请假' }, { id: '3', text: '按小时请假' }]},
       mbxl: '',
       mbid: '',
       xxdm: '',
       list: [],
       lcmc: '',
       lcdl: '',
-      bdxlx:'',
+      bdxlx: '',
       wordcount: 0,
       tableList: [],
       listQuery: {              // 分页
@@ -104,8 +103,9 @@ export default {
         limit: 20,
         xxdm: ''
       },
-      showqjlx:false,
-    };
+      changeSure: false, // 防止重复提交
+      showqjlx: false
+    }
   },
 
   created() {
@@ -114,7 +114,6 @@ export default {
     this.getTemplateInfoByLx();
     this.getTemplateInfoById();
     this.getList();
-    this.getDictMap();
   },
 
   methods: {
@@ -128,6 +127,7 @@ export default {
     },
 
     getTemplateInfoById() {
+      console.log(this.mbid);
       if (this.mbid) {
         mbxxApi.mbbd(this.mbid).then(response => {
           this.list = this.handleData(response);
@@ -162,13 +162,6 @@ export default {
       return bdList;
     },
 
-    getDictMap() {
-      getXXMess(this.xxdm).then(response => {
-        this.dictMap.qjdw = response.data.qjdw;
-        this.dictMap.scfs = response.data.scfs;
-      })
-    },
-
     getList() {
       this.listLoading = true;
       this.listQuery.xxdm = this.xxdm;
@@ -191,7 +184,7 @@ export default {
     watchWordcount() {
       this.wordcount = this.lcmc.length;
     },
-    bcspmb(mbzt){
+    bcspmb(mbzt) {
       const mbxx = {};
       mbxx.lcmc = this.lcmc;
       mbxx.lcdl = this.lcdl;
@@ -199,24 +192,42 @@ export default {
       mbxx.bdid = this.activeName;
       mbxx.xxdm = this.xxdm;
       mbxx.lczt = mbzt;
-      if(mbxx.lcmc==''||mbxx.lcdl==''||mbxx.bdid==''){
+      if (mbxx.lcmc === '' || mbxx.lcdl === '' || mbxx.bdid === '') {
         this.$message({ type: 'warning', message: '请完整填写模板表单信息!' });
         return false;
       }
-      if(this.mbid){
+      if (this.mbid) {
+        this.changeSure = true;
         mbxx.mbid = this.mbid;
-        mbxxApi.put(this.mbid,mbxx).then(response => {
-          this.$router.push({ name: '审批流程'});
+        mbxxApi.updateLcmb(mbxx).then(res => {
+          if (res.status === 200) {
+            this.$router.push({ name: '审批流程' });
+          } else {
+            this.$message({ type: 'warning', message: res.message });
+          }
         });
-      }else{
-        mbxxApi.add(mbxx).then(response => {
-          this.$router.push({ name: '审批流程'});
+        const that = this;
+        setTimeout(() => {
+          that.changeSure = false;
+        }, 1500);
+      } else {
+        this.changeSure = true;
+        mbxxApi.addLcmb(mbxx).then(res => {
+          if (res.status === 200) {
+            this.$router.push({ name: '审批流程' });
+          } else {
+            this.$message({ type: 'warning', message: res.message });
+          }
         });
+        const that = this;
+        setTimeout(() => {
+          that.changeSure = false;
+        }, 1500);
       }
     },
-    checksfqj(bdxList){
-      const bdxx = _.find(bdxList,  {'bdbm': 'qjlx'});
-      if(bdxx){
+    checksfqj(bdxList) {
+      const bdxx = _.find(bdxList, { bdbm: 'qjlx' });
+      if (bdxx) {
         this.showqjlx = true;
       }
     }
@@ -228,7 +239,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 .phoneBox{
   background: url("/static/img/phonebg.png") no-repeat top center;
   height: 766px;

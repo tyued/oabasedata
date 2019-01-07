@@ -8,6 +8,14 @@ export function add(query) {
   });
 }
 
+export function addLcmb(query) {
+  return fetch({
+    url: '/api/workflow/spLcmbxx/addLcmb',
+    method: 'post',
+    data: query
+  });
+}
+
 export function all() {
   return fetch({
     url: '/api/workflow/spLcmbxx/all',
@@ -25,6 +33,14 @@ export function mbbd(mbid) {
 export function mbxx(query) {
   return fetch({
     url: '/api/workflow/spLcmbxx/mbxx',
+    method: 'post',
+    data: query
+  });
+}
+
+export function mbxxAll(query) {
+  return fetch({
+    url: '/api/workflow/spLcmbxx/mbxxAll',
     method: 'post',
     data: query
   });
@@ -48,6 +64,14 @@ export function put(id, query) {
   return fetch({
     url: '/api/workflow/spLcmbxx/' + id,
     method: 'put',
+    data: query
+  })
+}
+
+export function updateLcmb(query) {
+  return fetch({
+    url: '/api/workflow/spLcmbxx/updateLcmb',
+    method: 'post',
     data: query
   })
 }

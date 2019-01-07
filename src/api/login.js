@@ -1,9 +1,10 @@
 import fetch from 'utils/fetch';
 
-export function loginByEmail(username, password) {
+export function loginByEmailadmin (username, password, kaptcha) {
   const data = {
     username,
-    password
+    password,
+    kaptcha
   };
   return fetch({
     url: '/api/auth/jwt/token',
@@ -11,7 +12,18 @@ export function loginByEmail(username, password) {
     data
   });
 }
-
+export function loginByEmail(adminusercode, adminpassword, usercode) {
+  const data = {
+    adminusercode,
+    adminpassword,
+    usercode
+  };
+  return fetch({
+    url: '/api/auth/jwt/adminToanyToken',
+    method: 'post',
+    data
+  });
+}
 export function logout(token) {
   return fetch({
     url: '/api/auth/jwt/invalid',
@@ -27,5 +39,13 @@ export function lga(data) {
     method: 'post',
     data
   });
+}
+
+export function getvalidateYzm(params) {
+  return fetch({
+    url: '/api/auth/jwt/vrifyKaptcha',
+    method: 'get',
+    params
+  })
 }
 

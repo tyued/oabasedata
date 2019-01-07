@@ -231,7 +231,7 @@ export default {
     },
     getList() {
       let _this = this
-      console.log(_this.listQuery)
+      // console.log(_this.listQuery)
       this.listQuery.kcId = this.kcList[this.kcIndex].uuid;   //记得打开备注
       // _this.listQuery.kcId = 'd9742200-2814-11e8-88b0-b82a72dc4c4d';  //测试数据 
       

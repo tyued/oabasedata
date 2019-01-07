@@ -1,0 +1,88 @@
+<div class="app-container calendar-list-container">
+  <el-row class="row-padding">
+    年级
+    <el-select @change="handleSearch" v-model="classValue" clearable placeholder="请选择年级">
+      <el-option v-for="item in classOptions" :key="item.value" :label="item.label" :value="item.value">
+      </el-option>
+    </el-select>
+    <span>&emsp;学期</span>
+    <el-select @change="handleSearch" v-model="termValue" clearable placeholder="请选择学期">
+      <el-option v-for="item in termOptions" :key="item.value" :label="item.label" :value="item.value">
+      </el-option>
+    </el-select>
+    &emsp;必读/选读
+    <el-select @change="handleSearch" v-model="typeValue" clearable placeholder="全部类型">
+      <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value">
+      </el-option>
+    </el-select>
+    &emsp;是否已审核
+    <el-select @change="handleSearch" v-model="checkValue" placeholder="全部类型">
+      <el-option v-for="item in checkOptions" :key="item.value" :label="item.label" :value="item.value">
+      </el-option>
+    </el-select>
+    <el-input maxlength="20" size="medium" style="width: 200px;margin-left: 10px;" v-model="searchName" placeholder="请输入关键字"></el-input>
+    <el-button type="primary" @click="handleSearch">搜索</el-button>
+  </el-row>
+
+  <el-row>
+    <el-row>
+      <el-table :data="tableData" border style="width: 100%">
+        <el-table-column prop="position" label="位置">
+        </el-table-column>
+        <el-table-column prop="BookName" label="书名" min-width="140">
+          <template slot-scope="scopeimg">
+            <span class="bookname-span" @click="handleImg(scopeimg.row.Image)">{{scopeimg.row.BookName}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="Author" label="作者">
+        </el-table-column>
+        <el-table-column prop="typeName" label="是否必读">
+        </el-table-column>
+        <el-table-column prop="className" label="所属年级">
+        </el-table-column>
+        <el-table-column prop="gradeName" label="所属学期">
+        </el-table-column>
+        <el-table-column prop="QuestionCount" label="已有题量">
+        </el-table-column>
+        <el-table-column width="240" prop="done" label="书目审核">
+          <template slot-scope="scopeB" v-if="scopeB.row.BookSource == 1">
+            <el-button size="small" type="success" v-if="scopeB.row.PulicVerify == 0" @click="toPublic(scopeB.row)">加入公共库</el-button>
+            <el-button size="small" type="danger" v-if="scopeB.row.PulicVerify == 0" @click="notToPublic(scopeB.row)">不加入公共库</el-button>
+
+            <span style="color: #409EFF" v-if="scopeB.row.PulicVerify == 1">已加入公共库</span>
+            <span style="color: #409EFF" v-if="scopeB.row.PulicVerify == 2">不加入公共库</span>
+          </template>
+        </el-table-column>
+        <el-table-column width="137" prop="done" label="题目审核">
+          <template slot-scope="scopeQ" v-if="scopeQ.row.check">
+            <el-button size="small" type="primary" @click="goToQList(scopeQ.row)">题目加入公共库</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-row>
+  </el-row>
+
+
+  <el-dialog title="提示" :visible.sync="queryDialogInto" width="30%">
+    <span>确定将本书加入公共库？</span>
+    <span slot="footer" class="dialog-footer">
+      <el-button type="primary" plain @click="queryDialogInto = false">取 消</el-button>
+      <el-button type="primary" @click="askInto">确 定</el-button>
+    </span>
+  </el-dialog>
+
+  <el-dialog title="提示" :visible.sync="queryDialogNotInto" width="30%">
+    <span>确定不允许本书加入公共库？</span>
+    <span slot="footer" class="dialog-footer">
+      <el-button type="primary" plain @click="queryDialogNotInto = false">取 消</el-button>
+      <el-button type="primary" @click="askNotInto">确 定</el-button>
+    </span>
+  </el-dialog>
+
+  <el-dialog title="封面" :visible.sync="imageVisible" width="400px">
+    <img class="img-item" :src="imgsrc" alt="图片路径错误">
+  </el-dialog>
+  <el-row>
+    <PageBar :currentpage="CurrentPage" @handlePageSize="handleCurrentPageSize" @handlePage="handleCurrentPage" :total="TotalPage"></PageBar>
+  </el-row>
+</div>

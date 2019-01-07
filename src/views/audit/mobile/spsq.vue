@@ -82,13 +82,13 @@ export default {
 
   methods: {
     cxqjxxbymbid(){
-      api.cxspxxBymb(this.mbid).then(response => {
+      api.cxspxxBymb(this.mbid, this.userid).then(response => {
         this.mbxx= response;
-        try{
+/*        try{
           this.bmid = response.groupList[0].id;
         }catch (e) {
           console.error(e+"请先设置部门！")
-        }
+        }*/
         const bdx = _.find(this.mbxx.bdxList,  ['bdbm', 'qjsc']);
         if(bdx){
           this.bdxmc = bdx.bdmc;
@@ -166,9 +166,9 @@ export default {
           flag = false;
         }
       })
-      if(this.bmid==''){
+/*      if(this.bmid==''){
         flag = false;
-      }
+      }*/
       return flag;
     },
     tjsq(){

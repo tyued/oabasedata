@@ -26,9 +26,6 @@ export default {
   },
   created() {
     this.fetchData();
-    // console.log('111');
-    // console.log(this.tabMapOptions);
-    // console.log('222');
   },
   mounted() {
       // console.log(this.tabMapOptions);
@@ -36,7 +33,6 @@ export default {
   methods: {
     fetchData() {
       getAllGroupTypes().then(data => {
-        // console.log(data);
         this.tabMapOptions = data;
       });
     }

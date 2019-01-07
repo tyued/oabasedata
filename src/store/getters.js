@@ -1,8 +1,11 @@
 const getters = {
   sidebar: state => state.app.sidebar,
+  sidebarcurMenuId: state => state.app.sidebarcurMenuId,
+  sidebarcurMenu: state => state.app.sidebarcurMenu,
   visitedViews: state => state.app.visitedViews,
   token: state => state.user.token,
   avatar: state => state.user.avatar,
+  infoxxmc: state => state.user.xxmc,
   name: state => state.user.name,
   introduction: state => state.user.introduction,
   status: state => state.user.status,
@@ -32,5 +35,11 @@ const getters = {
   dict_xzlx: state => state.user.dict.XZLX,                     // 学制类型
 
   get_dynamicTagschange:  state => state.user.dynamicTagschange,
+  get_qdKcArr:  state => state.project.qdsearchKcArr,
+  get_qdNjArr:  state => state.project.qdsearchNjArr,
+  set_ranklist: state => state.division.ranklist,
+  set_copyranklist: state => state.division.copyranklist,
+  set_batch: state => state.division.batch,
+  set_schoolCode: state => state.division.schoolCode
 };
 export default getters

@@ -31,6 +31,13 @@ export function fetchlistgroup(query) {
   });
 }
 
+export function fetchlistRole(query) {
+  return fetch({
+    url: '/api/admin/group/listGroupByEntiy',
+    method: 'post',
+    data: query
+  });
+}
 
 export function addObj(obj) {
   return fetch({
@@ -49,7 +56,7 @@ export function getObj(id) {
 
 export function delObj(id) {
   return fetch({
-    url: '/api/admin/group/' + id,
+    url: '/api/admin/group/delete/' + id,
     method: 'delete'
   });
 }
@@ -70,10 +77,22 @@ export function getUsers(id) {
 }
 
 export function modifyUsers(id, data) {
+  // fix [6676 角色部门全体教师赋予权限时报错], put方式提交的参数会拼接在url地址后面,
+  // 有长度限制, 修改为通过post方式参数放在请求体body中提交
   return fetch({
     url: '/api/admin/group/' + id + '/user',
-    method: 'put',
-    params: data
+    method: 'post',
+    data,
+    transformRequest: [function(data) {
+      const body = [];
+      for (const it in data) {
+        body.push(encodeURIComponent(it) + '=' + encodeURIComponent(data[it]));
+      }
+      return body.join('&');
+    }],
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
   });
 }
 
@@ -117,6 +136,48 @@ export function modifyMenuAuthority(id, data) {
   });
 }
 
+export function modifyDDMenuAuthority(id, data) {
+  return fetch({
+    url: '/api/admin/group/' + id + '/authority/mobileDDmenu',
+    method: 'post',
+    params: data
+  });
+}
+
+export function modifyWXMenuAuthority(id, data) {
+  return fetch({
+    url: '/api/admin/group/' + id + '/authority/mobileWXmenu',
+    method: 'post',
+    params: data
+  });
+}
+export function modifySJMenuAuthority(data) {
+  return fetch({
+    url: '/api/base/baseDataAuthority/saveAuthoritys',
+    method: 'post',
+    data
+  });
+}
+export function getMobileWXMenuAuthority(id) {
+  return fetch({
+    url: '/api/admin/group/' + id + '/authority/mobileWXmenu',
+    method: 'get'
+  });
+}
+
+export function getMobileDDMenuAuthority(id) {
+  return fetch({
+    url: '/api/admin/group/' + id + '/authority/mobileDDmenu',
+    method: 'get'
+  });
+}
+
+export function getMobileSJMenuAuthority(id) {
+  return fetch({
+    url: '/api/base/baseDataAuthority/' + id + '/authoritys',
+    method: 'get'
+  });
+}
 
 export function getMenuAuthority(id) {
   return fetch({
@@ -131,4 +192,30 @@ export function addGroupUser(data) {
     method: 'put',
     params: data
   });
+}
+
+export function getJsBm(query) {
+  return fetch({
+    url: '/api/admin/group/getJsBm',
+    method: 'get',
+    params: query
+  });
+}
+
+// 搜索部门成员
+export function Searchmember(query) {
+  return fetch({
+    url: '/api/admin/user/selectMemberByName',
+    method: 'get',
+    params: query
+  })
+}
+
+// 获取学校所有教师
+export function Getallteacher(query) {
+  return fetch({
+    url: '/api/admin/user/page',
+    method: 'get',
+    params: query
+  })
 }

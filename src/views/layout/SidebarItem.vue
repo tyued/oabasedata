@@ -1,19 +1,15 @@
 <template>
 	<div class='menu-wrapper'>
-	
+
 	<template v-for="item in routes">
-		<!-- <router-link v-if="item.children.length>0" :to="item.code+'/'+item.children[0].code">
-			<el-menu-item :index="item.code+'/'+item.children[0].code" class='submenu-title-noDropdown'>
-				<icon-svg v-if='item.icon' :icon-class="item.icon"></icon-svg>
-				<span slot="title">{{item.children[0].title}}</span>
-			</el-menu-item>
-		</router-link> -->
-		<el-submenu :index="item.title">
+
+		<el-submenu :index="item.title"  v-if='item.children&&item.children.length>0'>
 			<template slot="title">
 				<icon-svg v-if='item.icon' :icon-class="item.icon"></icon-svg>
-				<span>{{item.title}}</span>
+				<span>{{item.title}}</span>				
 			</template>
 			<template v-for="child in item.children">
+		
 				<sidebar-item class='nest-menu' v-if='child.children&&child.children.length>0' :routes='[child]'> </sidebar-item>
 				<router-link v-else :to="'/'+item.code+'/'+child.code">
 					<el-menu-item :index="item.code+'/'+child.code">
@@ -23,6 +19,12 @@
 				</router-link>
 			</template>
 		</el-submenu>
+		<router-link v-else :to="'/'+sidebarcurMenu+'/'+item.code">
+			<el-menu-item :index="item.title">
+				<icon-svg v-if='item.icon' :icon-class="item.icon"></icon-svg>
+				<span>{{item.title}}</span>
+			</el-menu-item>
+		</router-link>
 
 	</template>
 
@@ -30,13 +32,35 @@
 </template>
 
 <script>
+	import { mapGetters } from 'vuex';
   export default {
     name: 'SidebarItem',
     props: {
       routes: {
-        type: Array
+        // type: Array
       }
-    }
+    },
+		data(){
+        return{
+        }
+    },
+		computed: {     
+			...mapGetters([
+					'sidebar',
+					'sidebarcurMenu',
+			]),
+    },
+		mounted() {
+    },
+		watch:{
+			sidebar(){
+			},
+			routes(){
+			},
+			sidebarcurMenu(){
+				console.log(this.sidebarcurMenu)
+			}
+		}
   }
 </script>
 

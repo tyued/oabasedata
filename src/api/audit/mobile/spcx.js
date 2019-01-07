@@ -62,11 +62,3 @@ export function del(id) {
     method: 'delete'
   });
 }
-export function dclcsl(query) {
-  return fetch({
-    url: '/api/workflow/spLcsl/exportLcsl',
-    method: 'post',
-    data: query,
-
-  });
-}

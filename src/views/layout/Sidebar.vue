@@ -1,31 +1,13 @@
 <template>
-    <el-menu mode="vertical" unique-opened :default-active="$route.path" :collapse="isCollapse">
-
-      <!--
-      <el-submenu index="1">
-        <template slot="title">
+    <div class="sidebar-container-view">
+      <router-link :to="'/dashboard'" class="sider-index">
           <icon-svg icon-class="setting"></icon-svg>
-          <span>审批管理</span>
-        </template>
-
-        <router-link to="/audit/approvalProcess">
-          <el-menu-item index="1-1">
-            <icon-svg icon-class="category"></icon-svg>
-            <span>审批流程</span>
-          </el-menu-item>
-        </router-link>
-
-        <router-link to="/audit/holidayManager">
-          <el-menu-item index="1-3">
-            <icon-svg icon-class="category"></icon-svg>
-            <span>假期管理</span>
-          </el-menu-item>
-        </router-link>
-      </el-submenu>
-      -->
-
-      <sidebar-item :routes='permissionMenus'></sidebar-item>
-    </el-menu>
+          <span>首页</span>
+      </router-link>
+      <el-menu mode="vertical" unique-opened :default-active="$route.path" :collapse="isCollapse">
+        <sidebar-item :routes='changepermissionMenus'></sidebar-item>
+      </el-menu>
+    </div>
 </template>
 
 
@@ -34,26 +16,69 @@
   import SidebarItem from './SidebarItem';
   export default {
     components: { SidebarItem },
-    mounted() {
-    // console.log(this.$route);
-    // console.log(this.$route.path);
+    data(){
+        return{
+            changepermissionMenus:[],
 
-    // console.log(this.sidebar)
-    //  console.log(this.permissionMenus);
+        }
+    },
+    mounted() {
     },
 
     computed: {
       ...mapGetters([
         'sidebar',
+        'sidebarcurMenuId',
+        'sidebarcurMenu',
         'permissionMenus'
       ]),
       isCollapse() {
         return !this.sidebar.opened
       }
+    },
+    created() {
+        this.menuChange()
+    },
+    watch:{
+      sidebar(){
+        // console.log(this.sidebar)
+      },
+      sidebarcurMenuId(){
+        this.menuChange()
+      },
+    },
+    methods: {
+      menuChange(){
+        var that = this
+        // if(this.sidebarcurMenu=='dashboard'){          //首页
+        //   this.changepermissionMenus = []
+        // }else{
+          this.permissionMenus.forEach(function(item,index){
+            if(item.id==that.sidebarcurMenuId){
+              that.changepermissionMenus = item.children
+              that.$store.dispatch('SetCurMenu',item.code)
+            }
+          })
+        // }
+      },
     }
   }
 </script>
 <style rel="stylesheet/scss" lang="scss">
+    .sider-index{ 
+      display:block;
+      height: 56px; 
+      line-height: 56px;
+      padding: 0 20px;
+      color:#fff;
+    }
+    .sider-index:focus,.sider-index:hover{
+      background-color: #48576a;
+      color:#fff;
+    }
+    .sidebar-container-view .el-menu{
+			background:#324157;
+    }
     .el-submenu .el-menu{
 			background:#1f2d3d;
 		}

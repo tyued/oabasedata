@@ -8,7 +8,7 @@
                     <el-option label="场地简称" value="cdjc"></el-option>
                     <el-option label="场地地址" value="cddz"></el-option>
                     <el-option label="场地用途" value="cdyt"></el-option>
-                </el-select>  
+                </el-select>
             </el-input>
             <el-button class="filter-item" type="primary" v-waves icon="search" @click="handleFilter">搜索</el-button>
             <el-button class="filter-item"  style="margin-left: 10px;" @click="handleCreate" type="primary" icon="edit">添加</el-button>
@@ -38,7 +38,7 @@
                 <template slot-scope="scope">
                     <el-button size="small" type="success" @click="handleUpdate(scope.row)">编辑</el-button>
                     <el-button size="small" type="danger" @click="handleDelete(scope.row)">删除</el-button>
-                </template> 
+                </template>
             </el-table-column>
         </el-table>
         <div v-show="!listLoading" class="pagination-container">
@@ -57,10 +57,10 @@
                             <el-input v-model="form.cdjc" placeholder=""></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row> 
+                </el-row>
                 <el-form-item label="地址">
                     <el-input v-model="form.cddz" placeholder=""></el-input>
-                </el-form-item>   
+                </el-form-item>
                 <el-form-item label="用途" required>
                     <el-checkbox-group v-model="formsel_jcdyt">
                         <!-- <el-checkbox v-for="item in purpose" :key="item.dm" :label="item.mc" :value="item.dm" name="cdyt"></el-checkbox> -->
@@ -75,7 +75,7 @@
                 <el-button v-if="dialogStatus=='create'" type="primary" @click="create('form')" :disabled="changeSure">确 定</el-button>
                 <el-button v-else type="primary" @click="update('form')" :disabled="changeSure">确 定</el-button>
             </div>
-            
+
         </el-dialog>
     </div>
 </template>
@@ -109,11 +109,11 @@ export default {
             formsel_jcdyt:[],
 
             dialogFormVisible: false,               //弹层是否显示
-            dialogStatus: '',   
+            dialogStatus: '',
             textMap: {                              //判断弹层是添加还是编辑
                 update: '编辑',
                 create: '创建'
-            },          
+            },
             tabPosition:'left',
             form:{},                                //表单
 
@@ -125,7 +125,7 @@ export default {
         this.getList()
     },
     watch:{
-        
+
     },
     methods:{
         getList() {
@@ -159,28 +159,28 @@ export default {
         handleCurrentChange(val) {
             this.listQuery.page = val;
             this.getList();
-        },        
+        },
         // 添加
         handleCreate() {
             this.resetTemp();
             this.dialogStatus = 'create';
             this.dialogFormVisible = true;
-        },     
+        },
         resetTemp() {
             this.form = {};
             this.formsel_jcdyt = [];
             this.changeSure = false;
         },
-        //编辑    
+        //编辑
         handleUpdate(row) {
             this.changeSure = false;
             getObj(row.uuid).then(response => {
                 this.form = response.data;
                 this.judgecdty(this.form.cdyt)
                 this.dialogFormVisible = true;
-                this.dialogStatus = 'update';             
+                this.dialogStatus = 'update';
             });
-        }, 
+        },
         // 删除
         handleDelete(row) {
             this.$confirm('此操作将永久删除, 是否继续?', '提示', {
@@ -213,16 +213,16 @@ export default {
                 if (valid) {
                     this.changeSure = true;
                     this.form.cdyt = '';
-                    if(this.formsel_jcdyt.length>0){                   
+                    if(this.formsel_jcdyt.length>0){
                         for(var i=0;i<this.formsel_jcdyt.length;i++){
                             if(this.form.cdyt){
 
                                 this.form.cdyt = this.form.cdyt + ',' +  this.formsel_jcdyt[i]
                             }else{
                                 this.form.cdyt = this.formsel_jcdyt[i]
-                            }                           
-                        }  
-                    } 
+                            }
+                        }
+                    }
                     this.form.xxdm = window.localStorage.getItem("xxdm");
                     addObj(this.form).then(() => {
                         this.dialogFormVisible = false;
@@ -234,7 +234,7 @@ export default {
                             duration: 2000
                         });
                     })
-                    
+
                     var that = this;
                     setTimeout(function(){
                         that.changeSure = false;
@@ -244,7 +244,7 @@ export default {
                     return false;
                 }
             });
-        },  
+        },
         // 编辑页面
         update(formName) {
             this.$refs[formName].validate(valid => {
@@ -252,7 +252,7 @@ export default {
                     this.changeSure = true;
                     this.dialogFormVisible = false;
                     this.form.cdyt = '';
-                    if(this.formsel_jcdyt.length>0){                   
+                    if(this.formsel_jcdyt.length>0){
                         for(var i=0;i<this.formsel_jcdyt.length;i++){
                             if(this.form.cdyt){
 
@@ -260,9 +260,9 @@ export default {
                             }else{
                                 this.form.cdyt = this.formsel_jcdyt[i]
                             }
-                            
-                        }  
-                    }        
+
+                        }
+                    }
                     putObj(this.form.uuid, this.form).then(() => {
                         this.dialogFormVisible = false;
                         this.getList();
@@ -271,7 +271,7 @@ export default {
                             message: '创建成功',
                             type: 'success',
                             duration: 2000
-                        });       
+                        });
                     });
                     var that = this;
                     setTimeout(function(){
@@ -282,7 +282,7 @@ export default {
                     return false;
                 }
             });
-        },  
+        },
         // 场地用途
         judgecdty(val){
             if(val){
@@ -294,7 +294,7 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
     .filter-container .filter-item{ vertical-align: inherit;}
     .el-input-group__append, .el-input-group__prepend{ padding: 0 10px;}
     .el-checkbox+.el-checkbox{margin-left: 0;}

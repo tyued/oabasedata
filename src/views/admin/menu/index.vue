@@ -9,7 +9,7 @@
   </div>
 
 <el-row>
-  <el-col :span="8" style='margin-top:15px;'>
+  <el-col :span="7" style='margin-top:15px;'>
     <el-input
       placeholder="输入关键字进行过滤"
       v-model="filterText">
@@ -27,7 +27,7 @@
       >
     </el-tree>
   </el-col>
-  <el-col :span="16" style='margin-top:15px;'>
+  <el-col :span="16" style='margin-top:15px;margin-left: 20px;'>
      <el-card class="box-card">
     <el-form :label-position="labelPosition" label-width="80px" :model="form" ref="form">
       <el-form-item label="路径编码" prop="code">
@@ -69,7 +69,7 @@
       </el-form-item>
     </el-form>
      </el-card>
-    <el-card class="box-card">
+    <el-card class="box-card" style="margin-top: 50px;">
         <span>按钮或资源</span>
       <menu-element :menuId='currentId' ref="menuElement"></menu-element>
     </el-card>
